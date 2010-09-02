@@ -1,0 +1,34 @@
+<ol class="page-tabs">
+  <li>
+    <%
+      str = "Select Font"
+  %>
+    <%= link_to(str,{:controller=>"assets",:action=>"select_font"}, :title=>"", :class=>(session[:current_action] == "select_font") ? "current" : "off" )%>
+  </li>
+  <li>
+    <%
+      str = "Select Frame"
+    %>
+    <%= link_to(str, {:controller=>"assets",:action=>"select_frame"}, :title=>"", :class=>(session[:current_action] == "select_frame") ? "current" : "off" )%>
+  </li>
+  <li>
+    <%
+      str = "Select Matting"
+    %>
+    <%= link_to(str, {:controller=>"assets",:action=>"select_matting"}, :title=>"", :class=>(session[:current_action] == "select_matting") ? "current" : "off" )%>
+  </li>
+ <li>
+    <%
+      str = "Select Ornament"
+  %>
+
+    <%= link_to(str, {:controller=>"assets",:action=>"select_ornament"}, :title=>"", :class=>(session[:current_action] == "select_ornament") ? "current" : "off" )%>
+  </li>
+  <%
+      str = "Upload Image"
+  %>
+<li class="last">
+    <%= link_to(str, {:controller=>"assets",:action=>"upload_image"}, :title=>"", :class=>(session[:current_action] == "upload_image") ? "last current" : "off" )%>  </li>
+
+</ol>
+

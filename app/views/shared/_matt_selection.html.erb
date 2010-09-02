@@ -1,0 +1,8 @@
+<select name="matting_second_selection" tabindex="2" id="select2" class="select-app"  onchange="<%= remote_function(:url => select_bottom_matt_ajax_assets_path, :with => "'bottom_matt='+this.options[this.selectedIndex].value", :before => "showLoading(true)", :complete => "showLoading(false)" ) %>">
+  <option  selected="selected"  value="none">None</option>
+  <% @bottom_matts.each do |bottom_matt| %>
+      <option <%= "selected='selected'" if @nameframe.bottom_matt == bottom_matt %> value="<%= bottom_matt.code %>"><%= bottom_matt.name.capitalize %></option>
+  <%end%>
+</select>
+<%= javascript_tag "$('select').selectbox()" %>
+

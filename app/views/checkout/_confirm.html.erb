@@ -1,0 +1,112 @@
+<!-- Order Info Box-->
+<div id="confirm-box" style="display:none;" name="fancy">
+  <div class="span-22 last confirm-details">
+    <% form_tag :url => '/checkout/submit_order' do -%>
+      <div class="span-10 column prepend-1">
+        <h3>Order Details</h3>
+        <div class="row">
+          <div class="span-5 column">NameFrame Cost</div>
+          <div class="span-1 column">:</div>
+          <div class="span-3 column last amount" id="nameframe_cost_label">Nameframe Cost
+          </div>
+        </div>
+        <div class="row">
+          <div class="span-5 column">Shipping Cost</div>
+          <div class="span-1 column">:</div>
+          <div class="span-3 column last amount" id="shipping_cost_label">Shipping Cost
+          </div>
+        </div>
+        <div class="row">
+          <div class="span-5 column">Tax</div>
+          <div class="span-1 column">:</div>
+          <div class="span-3 column last amount" id="tax_label">Tax
+          </div>
+        </div>
+        <div class="row total-amount">
+          <div class="span-5 column">Total</div>
+          <div class="span-1 column">:</div>
+          <div class="span-3 column last amount" id="order_total_label">Total
+          </div>
+        </div>
+      </div>
+      <div class="span-10 column prepend-1 last">
+        <h3>Date:</h3>
+        <div class="span-5 column"><p><%= Time.now.strftime("%m / %d / %Y") %></p></div>
+      </div>
+      <div class="clear"></div>
+      <div class="span-10 column prepend-1">
+        <h3>Billing Address</h3>
+        <p>
+          <span id="billing_name_label">address
+          </span>
+          <br />
+          <span id="billing_address_1_label">address
+          </span>
+          <br />
+          <span id="billing_address_2_label">address
+          </span>
+          <br />
+          <span id="billing_location_label">address
+          </span>
+        </p>
+      </div>
+      <div class="span-10 column prepend-1 last">
+        <h3>Shipping Address</h3>
+        <p>
+          <span id="shipping_name_label">address
+          </span>
+          <br />
+          <span id="shipping_address_1_label">address
+          </span>
+          <br />
+          <span id="shipping_address_2_label">address
+          </span>
+          <br />
+          <span id="shipping_location_label">address
+          </span>
+        </p>
+      </div>
+      <div class="clear"></div>
+      <div class="span-10 column prepend-1 last" style="width:400px;">
+        <h3>Payment Details</h3>
+
+        <div class="row">
+          <div class="span-5 column">Card Type</div>
+          <div class="span-1 column">:</div>
+          <span id="card_type_label">Card Type
+          </span>
+        </div>
+
+        <div class="row">
+          <div class="span-5 column">Credit Card No</div>
+          <div class="span-1 column">:</div>
+          <span id="credit_card_label">Credit Card No
+          </span>
+        </div>
+
+         <div class="row">
+          <div class="span-5 column">CVV</div>
+          <div class="span-1 column">:</div>
+          <span id="ccv_label">Cvv
+          </span>
+        </div>
+
+        <div class="row">
+          <div class="span-5 column">Expiration Date</div>
+          <div class="span-1 column">:</div>
+          <span id="expiray_date_label">Experition Date
+          </span>
+        </div>
+      </div>
+
+      <div class="buttons prepend-1">
+        <ul>
+          <li class="edit"><a onclick="$.fn.fancybox.close()" href="#" title="">Edit Information</a></li>
+          <li class="confirm-order"><%= link_to "Confirm Order", "#fancy", :onclick => "submit_checkout_form()" %></li>
+        </ul>
+      </div>
+    <%end -%>
+  </div>
+</div>
+<!-- Order Info Box-->
+

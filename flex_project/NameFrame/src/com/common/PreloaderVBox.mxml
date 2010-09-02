@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%"
+ 	backgroundColor="#8B8C8C"
+	>
+	<mx:Script>
+		<![CDATA[
+			[Bindable]
+			[Embed("/assets/preloader.swf")]
+			private var preloderIcon:Class;
+		]]>
+	</mx:Script>
+	
+	<mx:Image source="{preloderIcon}" maintainAspectRatio="false" width="50" height="50" verticalCenter="0" horizontalCenter="0"/>
+	<mx:Label text="Uploading/Saving processed image, please wait ...... " fontSize="16" verticalCenter="75" horizontalCenter="0"/>
+</mx:Canvas>

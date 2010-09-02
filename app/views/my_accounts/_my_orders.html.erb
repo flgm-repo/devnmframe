@@ -1,0 +1,23 @@
+       <%=will_paginate @orders%>
+      <div class="tbl-row table-titles">
+        <div class="span-6 column">Order Number</div>
+        <div class="span-5 column">Order Amount</div>
+        <div class="span-5 column">Date</div>
+        <div class="span-3 column last">Action</div>
+        <div class="clear"></div>
+      </div>
+
+        <%
+        i = false
+        @orders.each do |order|
+          i = !i
+        %>
+             <div class="tbl-row <%= (i)? 'odd':'even' %>">
+                  <div class="span-6 column"><%= link_to order.order_number, my_account_order_path(order) %></div>
+                  <div class="span-5 column"><%= number_to_currency(order.total) %></div>
+                  <div class="span-5 column"><%= order.created_at.strftime("%m - %d - %Y") %></div>
+                  <div class="span-3 column"><%= link_to 'show details', my_account_order_path(order) %></div>
+                  <div class="clear"></div>
+             </div>
+        <% end %>
+        <%=will_paginate @orders%>

@@ -1,0 +1,85 @@
+
+
+<!-- Directions-->
+<div class="span-33 directions customise"></div>
+<!-- Directions End-->
+<div class="outer-block box-pad">
+  <div class="inner-list">
+    <%= render :partial=>"/shared/page_tabs" %>
+    <div class="clear"></div>
+  </div>
+</div>
+<div class="clear"></div>
+<!-- Customize Options-->
+<div class="span-11 column outer-block">
+  <h5><%=session[:current_action].sub("_", " ").capitalize%></h5>
+  <div class="inner-block">
+    <% form_tag upload_image_assets_path, :id=>"form_ornament_select",:method=>"post", :class=>"customise-form" do%>
+      <fieldset>
+        <legend>$5 Additional for Ornaments</legend>
+        <img id="loading" src="/images/loading.gif" alt="loading" class="hidden" />
+        <label>Ornament Top Left:</label>
+
+          <select name="ornament_top_left_selection" tabindex="2" class="select-app" id="select1" onchange="<%= remote_function(:url => select_ornament_ajax_assets_path, :with => "'ornament_type=top_left&amp;ornament='+this.options[this.selectedIndex].value", :before => "showLoading(true)", :complete => "showLoading(false)") %>">
+            <option <%= "selected=selected" if session[:ornament_top_left_selection] == '' %> value="none">None</option>
+            <% @ornaments.each do |ornament_top_left| %>
+              <option <%= "selected='selected'" if @nameframe.top_left_ornament == ornament_top_left %> value='<%= ornament_top_left.name%>'><%= ornament_top_left.displayed_name.capitalize %></option>
+            <%end%>
+          </select>
+          <div class="clear"></div>
+
+        <div class="clear"></div>
+        <label>Ornament Top Right:</label>
+
+          <select name="ornament_top_right_selection" tabindex="3" id="select2" class="select-app" onchange="<%= remote_function(:url => select_ornament_ajax_assets_path, :with => "'ornament_type=top_right&amp;ornament='+this.options[this.selectedIndex].value", :before => "showLoading(true)", :complete => "showLoading(false)")%>">
+            <option <%= "selected=selected" if session[:ornament_top_right_selection] == '' %> value="none">None</option>
+            <% @ornaments.each do |ornament_top_right| %>
+              <option <%= "selected='selected'" if @nameframe.top_right_ornament == ornament_top_right %> value='<%= ornament_top_right.name %>'><%= ornament_top_right.displayed_name.capitalize %></option>
+            <%end%>
+          </select>
+          <div class="clear"></div>
+
+        <div class="clear"></div>
+        <label>Ornament Bottom Left:</label>
+
+          <select name="ornament_bottom_left_selection" tabindex="4" id="select3" class="select-app" onchange="<%= remote_function(:url => select_ornament_ajax_assets_path, :with => "'ornament_type=bottom_left&amp;ornament='+this.options[this.selectedIndex].value", :before => "showLoading(true)", :complete => "showLoading(false)")%>">
+            <option <%= "selected=selected" if session[:ornament_bottom_left_selection] == '' %> value="none">None</option>
+            <% @ornaments.each do |ornament_bottom_left| %>
+              <option <%= "selected='selected'" if @nameframe.bottom_left_ornament == ornament_bottom_left %> value='<%= ornament_bottom_left.name%>'><%= ornament_bottom_left.displayed_name.capitalize %></option>
+            <%end%>
+          </select>
+          <div class="clear"></div>
+
+        <div class="clear"></div>
+        <label>Ornament Bottom Right:</label>
+
+          <select name="ornament_bottom_right_selection" tabindex="3" class="select-app" id="select4" onchange="<%= remote_function(:url => select_ornament_ajax_assets_path, :with => "'ornament_type=bottom_right&amp;ornament='+this.options[this.selectedIndex].value", :before => "showLoading(true)", :complete => "showLoading(false)")%>">
+            <option <%= "selected=selected" if session[:ornament_bottom_right_selection] == '' %> value="none">None</option>
+            <% @ornaments.each do |ornament_bottom_right| %>
+              <option <%= "selected='selected'" if @nameframe.bottom_right_ornament == ornament_bottom_right %> value='<%= ornament_bottom_right.name %>'><%= ornament_bottom_right.displayed_name.capitalize %></option>
+            <%end%>
+          </select>
+          <div class="clear"></div>
+
+        <div class="clear"></div>
+        <div class="buttons">
+          <ul>
+            <li class="back"><%= link_to "Back", select_matting_assets_path %></li>
+            <li class="continue">
+             <%= link_to 'Checkout', "#preview", :class => "checkout_button" %>
+            </li>
+            </ul>
+        </div>
+         <%= link_to "Start Over", select_font_assets_path, :class => "clear start-over click_hand"  %>
+      </fieldset>
+    <%end%>
+  </div>
+</div>
+
+<!-- Customize Options Ends-->
+<!-- Preview Frame -->
+<div id="image_preview" class="span-22 column outer-block last">
+  <%= render :partial=>"/shared/frame_preview", :locals => {:cost => @cost} %>
+</div>
+<!-- Preview Frame Ends -->
+

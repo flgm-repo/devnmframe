@@ -1,0 +1,53 @@
+/* CSS file */
+@font-face{
+	font-family: Porkys;
+    src: url("assets/porkys.ttf");
+    unicode-range:
+        U+0020-U+0040, /* Punctuation, Numbers */
+        U+0041-U+005A, /* Upper-Case A-Z */
+        U+005B-U+0060, /* Punctuation and Symbols */
+        U+0061-U+007A, /* Lower-Case a-z */
+        U+007B-U+007E; /* Punctuation and Symbols */
+}
+
+@font-face{
+	font-family: Louisianne;
+    src: url("assets/louisianne.ttf");
+    unicode-range:
+        U+0020-U+0040, /* Punctuation, Numbers */
+        U+0041-U+005A, /* Upper-Case A-Z */
+        U+005B-U+0060, /* Punctuation and Symbols */
+        U+0061-U+007A, /* Lower-Case a-z */
+        U+007B-U+007E; /* Punctuation and Symbols */
+}
+
+@font-face{
+	font-family: Arial;
+    src: url("assets/arial.ttf");
+    unicode-range:
+        U+0020-U+0040, /* Punctuation, Numbers */
+        U+0041-U+005A, /* Upper-Case A-Z */
+        U+005B-U+0060, /* Punctuation and Symbols */
+        U+0061-U+007A, /* Lower-Case a-z */
+        U+007B-U+007E; /* Punctuation and Symbols */
+}
+
+.noAddedImg
+{
+	background-color:				"#FFFFFF";
+    background-image:			NOADDEDIMAGE;
+    background-repeat:			repeat;
+    background-position:			"center";
+    background-blend:           	normal;
+    border-alpha:               	1;
+    /* border-color:               	"#FFFFFF #000000 #000000 #000000"; */
+   /*  border-width:               	"10px 10px 10px 10px"; */
+    border-top-right-radius:   	0px;
+    border-bottom-left-radius:  0px;
+    border-bottom-right-radius: 0px;
+    border-top-left-radius:  		0px;
+    borderSkin:					ClassReference("com.degrafa.skins.CSSSkin");
+    asset-class:					ClassReference("assets.EmbeddedAssets");
+    title-style-name:				"titleStyle";
+}
+

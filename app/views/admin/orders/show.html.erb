@@ -1,0 +1,146 @@
+<% content_for :header_title do %>
+  Order Details
+<% end %>
+<div class="span-33 column outer-block">
+  <div class="inner-block">
+    <table width="100%" border="0">
+      <tr>
+        <td colspan="2" width="10%" style="padding-top:30px;" align="center">
+            <%=image_tag @nameframe_path , :width=>"200",:height=>"100"%>
+            <br/>
+            <br/>
+            <br/>
+            <%=link_to 'Return  to orders', :action=>:index  %>
+            <br/>
+            <br/>
+            <%=link_to 'Archive this Order', :action=>:archive_order,:id=>@order.id  %>
+            <br/>
+            <br/>
+            <h3>Change Status</h3>
+            <br/>
+            <%  form_tag :action=>:change_status , :id=>@order.id do %>
+            <%= select_tag :status, options_for_select([["New",1],["In Progress",2],["Completed",3],["Canceled",4]], @order.status)%>
+            <%= submit_tag  'save'%>
+            <% end %>
+        </td>
+        <td align="left"  valign="top">
+                        <!-- Order Info Box-->
+                      <div id="confirm-box" >
+                        <div class="span-22 last confirm-details">
+                            <div class="span-10 column prepend-1">
+                              <h3>Order Details</h3>
+                              <div class="row">
+                                <div class="span-5 column"><p>Order number</p></div>
+                                <div class="span-1 column">:</div>
+                                <div class="span-3 column last amount" id="nameframe_cost_label">
+                                  <%= @order.order_number  %>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="span-5 column"><p>User name</p></div>
+                                <div class="span-1 column">:</div>
+                                <div class="span-3 column last amount" id="nameframe_cost_label">
+                                  <%= @order.user_name %>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="span-5 column"><p>Email</p></div>
+                                <div class="span-1 column">:</div>
+                                <div class="span-3 column last amount" id="nameframe_cost_label">
+                                  <%= @order.email  %>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="span-5 column"><p>NameFrame Cost</p></div>
+                                <div class="span-1 column">:</div>
+                                <div class="span-3 column last amount" id="nameframe_cost_label">
+                                  <%= number_to_currency(@order.nameframe_cost)  %>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="span-5 column"><p>Shipping Cost</p></div>
+                                <div class="span-1 column">:</div>
+                                <div class="span-3 column last amount" id="shipping_cost_label">
+                                  <%= number_to_currency(@order.shipping_cost)  %>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="span-5 column"><p>Tax</p></div>
+                                <div class="span-1 column">:</div>
+                                <div class="span-3 column last amount" id="tax_label">
+                                  <%= number_to_currency(@order.tax)  %>
+                                </div>
+                              </div>
+                              <div class="row total-amount">
+                                <div class="span-5 column"><p>Total</p></div>
+                                <div class="span-1 column">:</div>
+                                <div class="span-3 column last amount" id="order_total_label">
+                                  <%= number_to_currency(@order.total) %>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="span-10 column prepend-1 last">
+                              <h3>Date:</h3>
+                              <div class="span-5 column"><p><%= @order.created_at.strftime("%m - %d - %Y") %></p></div>
+                            </div>
+                            <div class="span-10 column prepend-1 last">
+                              Gift To: <div class="right span-5 column"><p><%= @order.gift_to %></p></div>
+                            </div>
+                            <div class="span-10 column prepend-1 last">
+                              Gift From: <div class="right span-5 column"><p><%= @order.gift_from %></p></div>
+                            </div>
+                            <div class="span-10 column prepend-1 last">
+                              Gift Message: <div class="right span-5 column"><p><%= @order.gift_message %></p></div>
+                            </div>
+                            <div class="clear"></div>
+                            <div class="span-10 column prepend-1">
+                              <h3>Billing Address</h3>
+                              <p>
+                                <span id="billing_name_label">
+                                  <%=@billing_address.first_name + ' '+ @billing_address.last_name%>
+                                </span>
+                                <br/>
+                                <span id="billing_address_1_label">
+                                  <%=@billing_address.address_1%>
+                                </span>
+                                <br/>
+                                <span id="billing_address_2_label">
+                                  <%=@billing_address.address_2%>
+                                </span>
+                                <br/>
+                                <span id="billing_location_label">
+                                  <%=@billing_address.city + ',' + @billing_address.state + ', ZIP: '+ @billing_address.zip + ', ' + @billing_address.country %>
+                                </span>
+                              </p>
+                            </div>
+                            <div class="span-10 column prepend-1 last">
+                              <h3>Shipping Address</h3>
+                              <p>
+                                <span id="billing_name_label">
+                                  <%=@shipping_address.first_name + ' '+ @shipping_address.last_name%>
+                                </span>
+                                <br/>
+                                <span id="billing_address_1_label">
+                                  <%=@shipping_address.address_1%>
+                                </span>
+                                <br/>
+                                <span id="billing_address_2_label">
+                                  <%=@shipping_address.address_2%>
+                                </span>
+                                <br/>
+                                <span id="billing_location_label">
+                                  <%=@shipping_address.city + ',' + @shipping_address.state + ', ZIP: '+ @shipping_address.zip + ',' + @shipping_address.country %>
+                                </span>
+                              </p>
+                            </div>
+                            <div class="clear"></div>
+                            <div class="clear"></div>
+                        </div>
+                      </div>
+                      <!-- Order Info Box-->
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+

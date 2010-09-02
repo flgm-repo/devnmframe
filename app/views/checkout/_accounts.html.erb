@@ -1,0 +1,18 @@
+<h5>Account Info</h5>
+<div class="inner-block">
+  <fieldset class="row span-29">
+      <div class="span-10 column left">
+        <label><span class="required">*</span> Email Address:
+          <% if @email_error %>
+            <span class="error">Email Address alredy in use. Please login if you are already registered</span>
+          <%end%>
+        </label>
+         <input type="text" name="email_address" id="email_address" value="<%= @email_address if @email_address %>" class="input-box required email <%= @email_error?"error":"" %> span-9 left column" tabindex="1" />
+      </div>
+      <div class="span-19 column left last create-account">
+        <span class="left span-2 column create-account"> OR </span>
+        <%= link_to "I would like to create an account to save my nameframe designs and information.", "#login-box", :class => "login login-link click-hand left span-11 column last" %>
+      </div>
+  </fieldset>
+</div>
+

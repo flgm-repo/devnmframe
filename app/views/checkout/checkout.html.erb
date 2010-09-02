@@ -1,0 +1,166 @@
+<!-- Directions-->
+<div class="span-33 directions checkout"></div>
+
+<% if !error_messages_for(:user).blank? %>
+  <div class="notice">
+    <%= error_messages_for :user %>
+  </div>
+<% end %>
+
+<!-- Directions End-->
+<div class="clear"></div>
+<p class="field-info"><span>*</span> Indicates required fields</p>
+<!-- Customize Options-->
+<div class="span-33 column outer-block checkout-forms">
+  <% form_tag '/checkout/submit_order',:class=>"checkout-form cmxform",:id=>"submit_order_form" do -%>
+    <% unless current_user %>
+      <%= render :partial=>"accounts" %>
+    <%else%>
+      <input type="hidden" name="email_address" id="email_address" value="<%= current_user.email %>" />
+    <% end %>
+
+    <div class="clear"></div>
+    <%= render :partial=>"billing_address" %>
+    <div class="clear"></div>
+    <%= render :partial=>"shipping_address" %>
+    <div class="clear"></div>
+    <h5>Gift Message <span>(Message for Gift card to be sent with NameFrame)</span></h5>
+    <div class="inner-block">
+      <fieldset class="shipping">
+        <div class="row row-odd">
+
+            <input type="checkbox" id="is_gift" name="is_gift" tabindex="21" /><label class="margin-label" for="is_gift"> This is a gift, please include a gift card with my order.</label>
+        </div>
+        <div class="row">
+          <div class="span-10 column">
+            <label>To: </label>
+            <input type="text" id="gift_to" name="gift_to" class="input-box span-9 disabled left" tabindex="22" />
+            <label class="span-10 column">From: </label>
+            <input type="text" id="gift_from" name="gift_from" class="input-box span-9 disabled left" tabindex="23" />
+          </div>
+          <div class="span-10 column">
+            <label>Message <span class="optional">(optional)</span>: </label>
+            <textarea id="gift_message" name="gift_message" class="text-area span-9 disabled left" rows="6" tabindex="24"></textarea>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+    <div class="clear"></div>
+    <h5>How did you hear about us ?</h5>
+    <div class="inner-block">
+      <fieldset class="shipping">
+        <div class="row">
+          <div class="span-15 column">
+            <input type="text" id="how_did_you_hear_about_us" name="how_did_you_hear_about_us" class="input-box span-14 left" tabindex="25" />
+          </div>
+        </div>
+      </fieldset>
+    </div>
+    <div class="clear"></div>
+    <div class="span-15 column">
+      <h5>Payment Details</h5>
+    </div>
+    <div class="span-15 column prepend-1">
+      <h5>Shipping Details</h5>
+    </div>
+    <div class="clear"></div>
+    <div class="inner-block">
+      <fieldset class="shipping">
+        <div class="span-15 column">
+          <div class="row">
+            <div class="span-10 column left">
+              <label><span class="required">*</span> Credit Card Number: </label>
+              <input type="text" name="credit_card_number" id="credit_card_number" class="input-box span-9 left" tabindex="26" />
+            </div>
+            <div class="span-4 column left">
+              <label class="no-space"><span class="required">*</span> CVV: <span>(<a id="cvv-explanation" href="#cvv-box" title="">?</a>)</span></label>
+              <input type="text" name="cvv" id="cvv" class="input-box span-3 left" tabindex="27" />
+            </div>
+          </div>
+            <div class="row span-14 clear-margin column">
+              <div class="span-9 column">
+                <label><span class="required left">*</span> Expiration date: </label>
+              </div>
+              <div class="span-3 column month first clear select-box-min">
+                <select name="expiration_month" tabindex="28" id="expiration_month" class="select-box-min">
+                  <option value="01" selected="selected">01</option>
+                  <option value="02">02</option>
+                  <option value="03">03</option>
+                  <option value="04">04</option>
+                  <option value="05">05</option>
+                  <option value="06">06</option>
+                  <option value="07">07</option>
+                  <option value="08">08</option>
+                  <option value="09">09</option>
+                  <option value="10">10</option>
+                  <option value="11">11</option>
+                  <option value="12">12</option>
+                </select>
+              </div>
+              <div class="span-10 column year select-box last">
+                <select name="expiration_year" tabindex="29" id="expiration_year" class="select-box">
+                  <option value="2010" selected="selected">2010</option>
+                  <option value="2011">2011</option>
+                  <option value="2012">2012</option>
+                  <option value="2013">2013</option>
+                  <option value="2014">2014</option>
+                  <option value="2015">2015</option>
+                  <option value="2016">2016</option>
+                  <option value="2016">2017</option>
+                  <option value="2016">2018</option>
+                  <option value="2016">2019</option>
+                </select>
+              </div>
+
+              <div class="span-10 clear-margin left column">
+                <label><span class="required">*</span> Card Type: </label>
+                <p><input type="radio" name="card_type" value="visa" id="card_type_visa" checked tabindex="30"/><label for="card_type_visa"> <img src="/images/payment-type-visa.gif" /></label></p>
+                <p><input type="radio" name="card_type" value="master" id="card_type_master" tabindex="31"/><label for="card_type_master"><img src="/images/payment-type-master.gif" /></label></p>
+                <p><input type="radio" name="card_type" value="american_express" id="card_type_amex" tabindex="32"/><label for="card_type_amex"> <img src="/images/payment-type-amex.jpg" /></label></p>
+                <p><input type="radio" name="card_type" value="discover" id="card_type_discover" tabindex="32"/><label for="card_type_discover"><img src="/images/discover-card.gif" /></label></p>
+              </div>
+          </div>
+        </div>
+        <!-- Span-15 Ends-->
+        <div class="span-15 column prepend-1 input-box">
+          <p class="enter">Please select a shipping method</p>
+          <label generated="true" for="shipping_cost" id="shipping_cost_div"></label>
+          <p class="normal_shipping"><input type="radio"  value="ground" id="shipping_cost_normal" name="shipping_cost" class = "shipping_cost" tabindex="33" /><label for="shipping_cost_normal">Ground - $6.95</label></p>
+          <p class="special_shipping"><input type="radio" value="special" id="shipping_cost_special" class = "shipping_cost" name="shipping_cost" tabindex="34" /><label for="shipping_cost_special"> Ground - $19.95</label></p>
+          <p class="normal_shipping"><input type="radio" value="2_days" id="shipping_cost_2_days" class = "shipping_cost" name="shipping_cost" tabindex="35" /><label for="shipping_cost_2_days"> 2 Days Delivery - $12.95</label></p>
+          <p class="normal_shipping"><input type="radio" value="1_day" id="shipping_cost_1_day" class = "shipping_cost" name="shipping_cost" tabindex="36" /><label for="shipping_cost_1_day"> Next Day Delivery - $29.95</label></p>
+          <p>All NameFrame's will be sent via UPS.</p>
+        </div>
+        <div class="clear"></div>
+        <div class="order-total">
+          <p>Order Total - <span><%= number_to_currency(@cost) -%></span></p>
+        </div>
+        <p class="note">Note: NameFrame to be delivered to an address in Pennsylvania will be charged 6% sales tax.</p>
+        <div class="row row-odd no-image input-box span-30 ">
+            <input type="checkbox" id="terms" name="terms" tabindex="37" />
+            <label class="margin-label" for="terms"> I agree to the <a href="/site/terms_of_service" title="">terms of service</a> and approve my final design.</label>
+        </div>
+        <%= link_to image_tag("back-button.gif", :width => "102", :height => "49", :alt => "" ), upload_image_assets_path, :style=>"cursor:pointer", :class => "span-4 column " %>
+        <div id="finalize_button" class="column left" title="" ><img src="/images/finalise-pay-button.gif" width="274" height="49" alt="" style="cursor:pointer"/></div>
+
+      </fieldset>
+    </div>
+  <%end -%>
+</div>
+
+<div id="cvv-box" class="fancybox-container hide_element">
+  <%= image_tag("cvv.jpg", :width => "589", :height => "264", :alt => "CVV explanation" ) %>
+</div>
+
+<a href="#confirm-box" title="" id="confirm"></a>
+
+<!-- Customize Options Ends-->
+<div id="checkout">
+  <%= render :partial=>"confirm" %>
+</div>
+
+<% content_for :custom_javascripts do %>
+  <%= javascript_include_tag "shipping" %>
+  <%= javascript_include_tag "checkout" %>
+<% end %>
+

@@ -1,0 +1,117 @@
+@CHARSET "UTF-8";
+
+.jquery-selectbox {
+  border:10px solid #A7C2E6;
+  color: #444;
+  clear: both;
+  display: inline;
+  height: 20px;
+  float: left;
+  font-size: 14px;
+  margin: 4px 4px 4px 0;
+  padding: 8px;
+  position: relative;
+  width: 250px;
+  z-index:1;
+}
+
+.jquery-selectbox.selecthover {
+  border-color: #89aedd;
+  background-color: #fff;
+  z-index: 1500;
+}
+.jquery-selectbox .jquery-selectbox-currentItem {
+  display: block;
+  overflow: hidden;
+  padding: 0;
+  white-space: nowrap;
+  z-index: 1500;
+}
+
+.jquery-selectbox .jquery-selectbox-list {
+  background: #fff;
+  border: 10px solid #89aedd;
+  display: none;
+  font-size:95%;
+  height: 1%;
+  margin-bottom:15px;
+  min-height: 40px !important;
+  line-height: 20px;
+  letter-spacing: -1px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding:2px 0;
+  position: absolute;
+  top: 35px;
+  width: 230px;
+  z-index: 1500;
+}
+.jquery-selectbox .jquery-selectbox-moreButton {
+  background: url(../images/img/lay-selectMoreButton.gif);
+  cursor: pointer;
+  float: right;
+  height: 16px;
+  width: 16px;
+}
+.jquery-selectbox .jquery-selectbox-moreButton.morebuttonhover {
+  background: url(../images/img/lay-selectMoreButtonHover.gif);
+}
+
+.jquery-selectbox .jquery-selectbox-item.listelementhover {
+  background: #333;
+  color: #fff;
+}
+.jquery-selectbox .jquery-selectbox-item {
+  display: block;
+  cursor: default;
+  z-index: 1500;
+}
+
+/** ERROR classes **/
+form .error .jquery-selectbox {
+  background-image: url("..images/img/bg-TextFieldError.gif");
+  border-color: #d00;
+  color: #d00;
+}
+.row-odd .jquery-custom-selectboxes-replaced, .row-even .jquery-custom-selectboxes-replaced{
+  width:230px;
+}
+.row-odd .jquery-custom-selectboxes-replaced-list, .row-even .jquery-custom-selectboxes-replaced-list{
+  width:223px;
+}
+
+.billing .country .jquery-selectbox, .shipping .country .jquery-selectbox, .shipping .year .jquery-selectbox, .shipping .month .jquery-selectbox{
+  height:17px;
+  margin:0px;
+  padding:6px;
+}
+.billing .country .jquery-selectbox, .billing .country .jquery-selectbox .jquery-selectbox-list{
+  border-color:#a7c2e6;
+}
+.shipping .country .jquery-selectbox, .shipping .country .jquery-selectbox .jquery-selectbox-list, .shipping .year .jquery-selectbox, .shipping .month .jquery-selectbox, .shipping .year .jquery-selectbox-list, .shipping .month .jquery-selectbox-list{
+  border-color:#c4d6ee;
+}
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+   .country .jquery-selectbox, .year .jquery-selectbox, .month .jquery-selectbox{
+  margin:2px 0 0 0;
+}
+}
+.country .jquery-custom-selectboxes-replaced{
+  width:290px;
+}
+.country .jquery-custom-selectboxes-replaced-list{
+  width:283px;
+}
+.year .jquery-selectbox{
+  width:140px;
+}
+.year .jquery-custom-selectboxes-replaced-list{
+  width:133px;
+}
+.month .jquery-selectbox{
+  width:50px;
+}
+.month .jquery-custom-selectboxes-replaced-list{
+  width:43px;
+}
+

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:menu="com.pag.menu.*"
+	xmlns:fx="com.fusiox.ui.*"
+	width="100%" height="100%" verticalScrollPolicy="off" horizontalScrollPolicy="off"
+	creationComplete="init()" clipContent="false">
+	 
+	<mx:Script>
+		<![CDATA[
+			import gs.TweenMax;
+			import gs.easing.Expo;
+			//----------------------------------------------------------------------
+			//
+			//  Attributes
+			//
+			//----------------------------------------------------------------------			
+			[Bindable] private var _labelText:String; //this is menu item main label
+			[Bindable] private var _extraLabelText:String = "2"; //this is menu item extra text
+			[Bindable] private var menuExtraLabelVisible:Boolean = false;
+			[Bindable] private var _menuItemType:String; //this will indicate what icons image is to be used
+			
+			private var fisheyeMenuItemExpanded:FisheyeMenuItemExpanded;
+			
+			//----------------------------------------------------------------------
+			//
+			//  Properties
+			//
+			//----------------------------------------------------------------------	
+			/**
+			 * Getter function for extraLabelText property
+			 * */
+			public function get extraLabelText():String	
+			{
+				return _extraLabelText;
+			}
+			
+			/**
+			 * Setter function for extraLabelText property
+			 * */
+			public function set extraLabelText(value:String):void
+			{
+				_extraLabelText = value;
+			}	
+			
+			/**
+			 * Getter function for labelText property
+			 * */
+			public function get labelText():String	
+			{
+				return _labelText;
+			}
+			
+			/**
+			 * Setter function for labelText property
+			 * */
+			public function set labelText(value:String):void
+			{
+				_labelText = value;
+			}
+			
+			/**
+			 * Getter function for menuItemType property
+			 * */
+			public function get menuItemType():String	
+			{
+				return _menuItemType;
+			}
+			
+			[Inspectable(category="General", enumeration="profileIcon,reminderIcon,widgetsIcon,wishlistIcon,eStatementIcon", default="profileIcon")]
+			/**
+			 * Setter function for menuItemType property
+			 * */
+			public function set menuItemType(value:String):void
+			{
+				_menuItemType = value;
+				invalidateProperties();
+				if ( value == "profileIcon" || value == "widgetsIcon" || value == "eStatementIcon" )
+				{
+					menuExtraLabelVisible = false;
+				}
+				else
+				{
+					menuExtraLabelVisible = true;
+				}
+			}
+			
+			//----------------------------------------------------------------------
+			//
+			//  Overridden methods
+			//
+			//----------------------------------------------------------------------
+	
+			
+			//----------------------------------------------------------------------
+			//
+			//  Handler methods
+			//
+			//----------------------------------------------------------------------
+			/**
+			* Handler when user clicks on the menue. This makes the expandable menu popup then expand.
+			* */
+			private function onClickMenuItemHandler(e:MouseEvent):void
+			{	
+				TweenMax.to(expandedMenu, 1, { height:250 ,ease: Expo.easeOut });	
+			}
+						
+			//----------------------------------------------------------------------
+			//
+			//  Helper methods
+			//
+			//----------------------------------------------------------------------
+			private function init():void
+			{
+				this.addEventListener(MouseEvent.CLICK, onClickMenuItemHandler);
+			}
+			
+			public function onRollOutHandler():void
+			{
+				TweenMax.to(expandedMenu, 1, { height:0,ease: Expo.easeOut });	
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<mx:Resize id="resizeTweener" duration="100"/>
+	
+	<mx:Canvas id="buttonContainer" width="100%" height="100%" styleName="menuItemBG" clipContent="false" resizeEffect="{resizeTweener}">
+		<mx:Canvas id="menuIcon" styleName="{_menuItemType}" width="35" height="35" left="5" top="10"/>
+		<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" paddingLeft="30"
+			verticalGap="0" horizontalGap="0">
+			<mx:Text id="menuExtraLabel" height="18" styleName="extraMenuLabelStyle" htmlText="{_extraLabelText}" includeInLayout="{menuExtraLabelVisible}" visible="{menuExtraLabelVisible}"/>
+			<mx:Text  id="menuLabel" height="15" styleName="menuLabelStyle" htmlText="{_labelText}" selectable="false"/>
+		</mx:VBox>
+	</mx:Canvas>
+	<fx:Reflection id="reflection" target="{buttonContainer}" width="100%" height="20" fadeFrom="0.3" fadeTo="0" bottom="-20" scale="1"/>
+	<menu:FisheyeMenuItemExpanded id="expandedMenu" labelText="{_labelText}" menuItemType="{_menuItemType}" height="0" rollOut="onRollOutHandler()" bottom="0"/> 
+	
+</mx:Canvas>

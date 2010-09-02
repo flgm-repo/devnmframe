@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+  <head>
+    <title>NameFrame</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="resource-type" content="document"/>
+    <meta name="audience" content="all"/>
+    <meta name="distribution" content="global"/>
+    <meta name="keywords" content="baby frame,baby picture frame,baby photo frame,baby first year frame,baby photo frames,
+personalized baby frame,silver baby frame,personalized baby frames,baby footprint frame,baby keepsake frame,pewter baby frame,
+baby handprint frame,personalized baby picture frame,baby first year photo frame,personalized baby picture frames,baby first year frames,baby wall frame,engraved baby frame,baby collage frame,silver baby frames,silver baby picture frame,baby name frame,engraved baby frames,baby print frame,great frame, special frame"/>
+    <meta name="description" content=""/>
+    <meta name="robots" content="FOLLOW, INDEX"/>
+    <meta name="revisit-after" content="2 days"/>
+    <meta name="copyright" content="Site Name"/>
+    <meta name="author" content="Site admin Email"/>
+    <meta name="abstract" content="Site description text"/>
+    <%= link_tag "/favicon.ico", :rel => "shortcut icon" %>
+    <!-- StyleSheets -->
+    <%= stylesheet_link_tag 'main_stylesheet', :media => "all" %>
+    <%= stylesheet_link_tag 'print', :media => "print" %>
+    <%= yield :custom_stylesheets %>
+    <!-- JaveScripts -->
+    <%= javascript_include_tag "jquery-1.4.2.min" %>
+    <%= javascript_include_tag "jquery.fancybox-1.2.6" %>
+    <%= javascript_include_tag "jquery.formstyle-0.1.0"%>
+    <%= javascript_include_tag "jquery.selectbox-0.6.1"%>
+    <%= javascript_include_tag "jquery.easing.1.3"%>
+    <%= javascript_include_tag "jquery.validate"%>
+    <%= javascript_include_tag "jquery.blockUI"%>
+    <%= javascript_include_tag "application" %>
+    <%= yield :custom_javascripts %>
+    <%= javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};" if protect_against_forgery? %>
+  </head>
+
+  <body class="application_body">
+    <!-- Container -->
+    <div class="container">
+      <!-- Header-->
+      <div class="header span-33">
+        <ul class="top-nav">
+          <li><%= link_to "Home", root_path %></li>
+          <li><%= link_to "About Us", about_us_path %></li>
+          <li><%= link_to "Media", media_path %></li>
+          <li><%= link_to "Contact", contact_path %></li>
+          <% if current_user %>
+            <% if current_user.is_admin? %>
+              <li><%= link_to "Admin Home", admin_root_path %></li>
+              <li><%= link_to "Logout", logout_path %></li>
+            <% else %>
+              <li><%= link_to "Logout", logout_path %></li>
+            <% end %>
+            <li><%= link_to 'My Account', my_account_path %></li>
+          <% else %>
+            <li><a class="login" title="" href="#login-box">Login</a></li>
+          <% end%>
+        </ul>
+          <%= render :partial=> "/shared/header_image", :locals=>{:image=>@image}%>
+      </div>
+      <!-- Login Module-->
+
+      <div class="fancybox-container hide_element" id="login-box">
+        <h5 class="down">Login</h5>
+        <span class="div_login_notice notice"></span>
+        <% form_remote_tag :url => {:controller=>:sessions,:action=>:create}, :html=> {:class=>"login-form jNice"} do -%>
+          <fieldset>
+            <label>Email Address:</label>
+            <%= text_field_tag 'login', nil, :class => "input-box" %>
+            <label>Password:</label>
+            <%= password_field_tag 'password', nil, :class => "input-box" %>
+
+            <input name="save_data" type="hidden" value="<%= (controller.controller_name == 'assets')? 'true':'false' %>" />
+            <input name="remember_me" type="checkbox" value="1" />
+            <label class="pull">remember me</label>
+              <%= submit_tag ' ', :class => "login-button click_hand" %>
+              <%= link_to image_tag("signup.gif", :width => "160", :height => "59", :alt => "" ), '#signup-box', :class=>"click_hand signup-now" %>
+            <a href="#forgot-box" title="" class="forgot forgot-password">Forgot Password?</a>
+          </fieldset>
+        <% end %>
+      </div>
+      <!-- Signup Module-->
+        <div class="fancybox-container hide_element " id="signup-box" >
+          <h5>Sign Up</h5>
+            <span class= "div_login_notice notice"></span>
+            <% form_remote_for :user, :url => users_path, :html => {:class=> 'login-form'} do |f| -%>
+              <fieldset>
+                <label>Email</label>
+                <%= f.text_field :email, :class => 'input-box' %>
+
+                <label>Password</label>
+                <%= f.password_field :password, :class => 'input-box' %>
+
+                <label>Confirm Password</label>
+                <%= f.password_field :password_confirmation, :class => 'input-box' %>
+                <input name="save_data" type="hidden" value="<%= (controller.controller_name == 'assets')? 'true':'false' %>" />
+                <%= submit_tag 'Sign up', :type => "image", :src => "/images/create-user.gif" %>
+              </fieldset>
+            <% end %>
+        </div>
+      <!-- Forgot Password-->
+      <div id="forgot-box" class="fancybox-container hide_element">
+          <h5>Forgot Password</h5>
+            <span class="div_forgot_notice notice "></span>
+          <% form_remote_tag :url => {:controller=>:sessions,:action=>:forgot_password}, :html=> {:class=>"login-form jNice"} do -%>
+            <fieldset>
+              <label>Email Address:</label>
+              <%= text_field_tag 'email', nil, :class => "input-box" %>
+                <%= submit_tag '', :class => "email-button click_hand" %>
+            </fieldset>
+          <%end%>
+      </div>
+
+      <!-- Error Window -->
+      <a href="#errors-box" title="" id="errors"></a>
+      <div id="errors-box" style="display:none;">
+      </div>
+      <!-- Header Ends-->
+
+      <!-- Content -->
+      <div class="content-area span-33 clear">
+        <%= yield %>
+      </div>
+      <!-- Content Ends-->
+
+      <!-- Footer -->
+      <div class="footer span-33 clear">
+        <div class="span-24 column footer-left">
+          <p>&copy; 2009 NameFrame. All Rights Reserved.</p>
+          <ul>
+            <li><a href="/site/terms_of_service" title="">Terms of Service</a></li>
+            <li><a href="/site/privacy_policy" title="">Privacy Policy</a></li>
+            <li class="no-border"><a href="/site/contact" title="">Contact us</a></li>
+          </ul>
+        </div>
+        <div class="span-9 column footer-right last">
+          <ul>
+            <li class="verisign"><a href="#" class="click_pointer">Verisign</a></li>
+            <li class="made_in_usa"><a href="#" class="click_pointer">Made in Usa</a></li>
+          </ul>
+        </div>
+      </div>
+      <!-- Footer Ends -->
+    </div>
+    <div class="clear"></div>
+    <!-- Container Ends-->
+    <!-- Analytics code -->
+    <script type="text/javascript">
+    var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type="text/javascript">
+    try {
+    var pageTracker = _gat._getTracker("UA-16329119-1");
+    pageTracker._trackPageview();
+    } catch(err) {}</script>
+    <!-- Analytics code Ends -->
+  </body>
+</html>
+

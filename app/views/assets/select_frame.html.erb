@@ -1,0 +1,59 @@
+<!-- Directions-->
+  <div class="span-33 directions customise"></div>
+<!-- Directions End-->
+  <div class="outer-block box-pad">
+    <div class="inner-list">
+      <%= render :partial=>"/shared/page_tabs" %>
+      <div class="clear"></div>
+    </div>
+  </div>
+  <!-- Customize Options-->
+  <div class="span-11 column outer-block">
+    <h5><%=session[:current_action].sub("_", " ").capitalize%></h5>
+    <div class="inner-block ">
+      <% form_tag select_frame_assets_path,:id=>"form_frame_select",:method=>"post", :class=>"customise-form" do%>
+      <fieldset>
+        <label>Frame Style:</label>
+        <img id="loading" src="/images/loading.gif" alt="loading your changes" class="hidden" />
+        <% @frames.each do |frame| %>
+          <div class="row clear">
+            <div class="span-4 column">
+             <%= radio_button_tag 'frame_selection', frame.name.capitalize, ( @nameframe.frame && @nameframe.frame.name == frame.name)?true:false, :onchange=>remote_function(:url => select_frame_ajax_assets_path, :with =>"'frame=#{frame.name}'", :before => "showLoading(true)", :complete => "showLoading(false)"), :class => "left"%>
+             <label for="frame_selection_<%=frame.name.downcase.gsub(' ','_')%>" class="options click_hand"><%= frame.name.capitalize %></label>
+              </div>
+              <div class="span-3 column swatch">
+                <label for="frame_selection_<%=frame.name.downcase.gsub(' ','_')%>" class=" options click_hand"><%= image_tag frame.example_image_path, :width => "50px", :height => "20px" %></label>
+            </div>
+          </div>
+        <% end %>
+        <div class="row clear">
+          <div class="span-7 column">
+            <%= radio_button_tag 'frame_selection','', (@nameframe.frame.nil?)? true : false, :onchange=>remote_function(:url => "/assets/select_frame_ajax?frame=none", :before => "showLoading(true)", :complete => "showLoading(false)"),:class => "left"%>
+            <label class="options click_hand" for="frame_selection_">No Frame (<i>Mat only</i>)</label>
+          </div>
+        </div>
+        <div class="clear"></div>
+        <div class="buttons">
+          <ul>
+            <li class="back">
+              <%= link_to "Back", select_font_assets_path %>
+            </li>
+            <li class="continue">
+              <%= link_to "Continue", select_matting_assets_path %>
+            </li>
+          </ul>
+          <div class="clear"></div>
+        </div>
+         <%= link_to "Start Over", select_font_assets_path, :class => "clear start-over click_hand"  %>
+      </fieldset>
+    <%end%>
+  </div>
+</div>
+
+<!-- Customize Options Ends-->
+<!-- Preview Frame -->
+<div id="image_preview" class="span-22 column outer-block last">
+  <%= render :partial=>"/shared/frame_preview", :locals => {:cost => @cost} %>
+</div>
+<!-- Preview Frame Ends -->
+

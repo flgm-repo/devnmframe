@@ -1,0 +1,25 @@
+<div class="inner-block">
+    <% for nameframe in @nameframes 
+    unless nameframe.has_checkout?
+    %>
+
+ <div style="float: left;width:240px;">
+      <%= image_tag nameframe.get_image_path, :size => "200x100", :alt => "My job"%>
+    <br/>
+    <span>Cost:<%= nameframe.calculate_cost %></span>
+    <br/>
+    <%= link_to "Edit", edit_my_account_nameframe_url(nameframe), :html_options => {:class => "right"} %>
+    <%= link_to "|Delete|", my_account_nameframe_url(nameframe), :method => :delete, :html_options => {:class => "right"} %>
+    <%if nameframe.has_checkout?%>
+      <%= link_to nameframe.checkout.status_name, my_account_order_url(nameframe.checkout), :html_options => {:class => "right"} %>
+    <%else%>
+      <%= link_to "Checkout", checkout_my_account_nameframe_url(nameframe), :html_options => {:class => "right"} %>
+    <%end%>
+  </div>
+  <%end%>
+  <%  end %>
+   <div class="right">
+      <br/><br/>
+      <h4><%= link_to "Show more", my_account_nameframes_path %></h4>
+    </div>
+</div>

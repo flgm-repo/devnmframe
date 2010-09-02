@@ -1,0 +1,21 @@
+<div class="span-27 column outer-block align">
+  <h5>My Account Information</h5>
+  <div class="inner-block account">
+    <label class="left">Email:</label>
+    <span class="user-span"><%=h @user.email %></span>
+    <label class="left">Login Name:</label>
+    <span class="user-span"><%=h @user.login %></span>
+    <label class="left">Name:</label>
+    <span class="user-span"><%=h @user.name %></span><br class= "clear" />
+    <%= link_to image_tag ("edit-but-admin.gif", :width => "63", :height => "34", :alt => "", :class =>"edit-margin"), edit_admin_user_path(@user)%>
+  </div>
+  <h5><%= link_to "My Designs", my_account_nameframes_path %></h5>
+  <div class="inner-block account">
+     <%= render :partial=>'my_jobs' %>
+  </div>
+  <h5>My Orders</h5>
+  <div class="inner-block account">
+    <%= render :partial=>'my_orders' %>
+  </div>
+</div>
+

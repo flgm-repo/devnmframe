@@ -1,0 +1,20 @@
+<% if @header_image -%>
+<%= link_to image_tag ("logo.gif", :width => "206", :height => "104", :alt => "Nameframe", :class =>"edit-margin"), root_path, :class => "logo span-7 column append-2" %>
+          <p class="header-image span-19 column append-1">
+             <%= image_tag (@header_image, :width => "365", :height => "119", :alt => "Nameframe", :class =>"left")%><br />
+             <%= @header_image_text%>
+         </p>
+          <ul class="social-icons span-4 column last">
+            <li class="twitter"><a href="http://twitter.com/Name_Frame" title="">Twitter</a></li>
+            <li class="facebook"><a href="http://www.facebook.com/profile.php?id=790357291&amp;ref=profile#!/pages/Name-Frame/321927674149?ref=search&amp;sid=790357291.3965401862..1" title="">Facebook</a></li>
+            <li class="digg"><a href="#" title="">Digg</a></li>
+          </ul>
+<% else -%>
+<%= link_to image_tag ("logo.gif", :width => "206", :height => "104", :alt => "Nameframe", :class =>"edit-margin"), root_path, :class => "logo span-8 column append-21" %>
+          <ul class="social-icons span-4 column last">
+            <li class="twitter"><a href="http://twitter.com/Name_Frame" title="">Twitter</a></li>
+            <li class="facebook"><a href="http://www.facebook.com/profile.php?id=790357291&amp;ref=profile#!/pages/Name-Frame/321927674149?ref=search&amp;sid=790357291.3965401862..1" title="">Facebook</a></li>
+            <li class="digg"><a href="#" title="">Digg</a></li>
+          </ul>
+<% end -%>
+

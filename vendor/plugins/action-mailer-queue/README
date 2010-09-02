@@ -1,0 +1,115 @@
+ActionMailer::Queue
+===================
+
+This is a fork of Beam's action_mailer_queue
+
+It includes everything that the original does:
+  - render emails into database queue with sent and priority flags
+  - methods to process the email queue
+
+This fork adds:
+  - storing extra mail fields cc, bcc, reply_to, etc...
+  - storing both friendly names and addresses (so they don't get lost)
+  - forces all emails to be stored in an emails table  (eg - no need to have each mailer have it's own db table for a 
+  queue)
+    - no need to create a separate table for each mailer
+  - adds a 'method' field to the emails table that tells you which mailer/template was used... 
+  - creates an 'in_progress'
+    * If you process emails with a cron, and if you are using gmail or another external mail server, each email may take 
+    a while to actually send.  If the cron is frequent you don't want an overlap of emails being sent.
+
+Author
+======
+
+Geoff Evason
+
+Based on plugin by
+Andrew Beam
+KRAXNET s.r.o.
+
+Usage
+=====
+
+# Install
+script/plugin install git://github.com/geoffevason/action-mailer-queue.git
+
+# Generate the emails table migration and Email model
+script/generate action_mailer_queue Email
+*** Right now you need to call the model 'Email'.  There is probably a nice way to make this configurable, but I didn't 
+bother...
+
+# Mailers
+Mailers are made exactly as normal, just derived from the Email class
+
+eg:
+
+class UserNotifier < Email
+  def activation
+    ...
+  end
+end
+
+
+Deliver Emails
+--------------
+
+# call your mailers to deliver an email like normal:
+# this doesn't actually send the email, it just puts it in a queue
+UserNotifier.deliver_activation
+
+
+Sending Emails
+--------------
+You should create a cron job to send out the emails.
+
+you can use this:
+Email.queue.process!  
+
+Or create a rake task like this:
+
+namespace :email do
+
+  desc "Send all emails in the email queue"
+  task :queued => :environment do
+    @emails = Email.queue.for_send.with_processing_rules(:all)
+    puts "Delivering #{@emails.size}"
+    @emails.each do |e|
+      # emails (esp through gmail) can take a while to send
+      # If we are processing many emails we want to reload before deliverying
+      # to ensure we dont' send an email twise
+      e.reload
+      if e.in_progress? 
+        puts " #{e.id} : Already in progress"
+      elsif e.sent?
+        puts " #{e.id} : Already sent"
+      else
+        if e.deliver!
+          puts "  #{e.id} : #{e.to} : #{e.subject}"
+        else
+          puts " not delivered..."
+        end
+      end
+    end 
+  end
+end
+
+
+Settings
+--------
+ActionMailer::Queue.limit_for_processing = 100
+# - limit for Notification.queue.process!
+
+ActionMailer::Queue.max_tries_in_process = 5
+# - trying send mail only X times (with delay between attempt)
+
+ActionMailer::Queue.delay_between_attempt_in_process = 240 # [minutes]
+# - delay between attempt after previous attempt failed
+
+Queue scopes
+------------
+Email.queue.for_send # emails for send
+Email.queue.already_sent # emails already sent
+Email.queue.with_processing_rules # apply processing rules
+Email.queue.with_error # emails with more tries
+Email.queue.without_error # emails with 0 tries
+Notification.queue.without_error # emails with 0 tries

@@ -1,0 +1,52 @@
+
+<!-- Directions-->
+<div class="directions span-33 customise"></div>
+<!-- Directions End-->
+<div class="box-pad outer-block">
+  <div class="inner-list">
+    <%= render :partial=>"/shared/page_tabs" %>
+    <div class="clear"></div>
+  </div>
+</div>
+<!-- Customize Options-->
+<div class="span-11 column outer-block">
+  <h5><%=session[:current_action].sub("_", " ").capitalize%></h5>
+  <div class="inner-block">
+    <% form_tag select_frame_assets_path, :id=>"form_font_select",:method=>"post", :class=>"customise-form" do%>
+      <fieldset>
+        <label id="name_selection">Display Name: </label>
+        <input name="name_selection" class="input-box disabled selected-text clear left" type="text" value="<%=h @nameframe.selected_text %>" />
+        <%= submit_to_remote 'update_name', 'Update Name', :html => {:class => "input-button update-name clear left"}, :url => select_name_ajax_assets_path, :before => "showLoading(true); hide()", :complete => "showLoading(false)" %>
+        <label class="clear left">Font: </label>
+        <img id="loading" alt="loading your changes" src="/images/loading.gif" class="clear hidden left" />
+        <% @fonts.each do |font| %>
+          <div class="row clear">
+            <%= radio_button_tag_standard "font_selection",font.name,(@nameframe.font.name == font.name)?true:false,:id =>font.name,:onchange=>remote_function(:url => select_font_ajax_assets_path, :with =>"'font=#{font.name}'", :before => "showLoading(true)", :complete => "showLoading(false)")%>
+            <%= label_tag font.name, image_tag(font.font_image_path, :width => 122, :height => 19, :alt => font.name), :class => "click_hand" %>
+          </div>
+        <% end %>
+        <div class="buttons">
+          <ul>
+            <li class="back">
+              <%= link_to "Back", root_path %>
+            </li>
+            <li class="continue">
+              <%= link_to "Continue", select_frame_assets_path %>
+            </li>
+          </ul>
+        </div>
+        <%= link_to "Start Over", select_font_assets_path, :class => "clear start-over click_hand"  %>
+      </fieldset>
+    <%end%>
+  </div>
+
+
+</div>
+
+<!-- Customize Options Ends-->
+<!-- Preview Frame -->
+<div id="image_preview" class="span-22 column outer-block last">
+  <%= render :partial=>"/shared/frame_preview", :locals => {:cost => @cost} %>
+</div>
+<!-- Preview Frame Ends -->
+

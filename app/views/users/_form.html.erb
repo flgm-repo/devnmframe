@@ -1,0 +1,11 @@
+<%= form.label :name %><br />
+<%= form.text_field :name %><br />
+<%= form.label :email %><br />
+<%= form.text_field :email, :readonly => false %><br />
+<%= form.label :password, form.object.new_record? ? nil : "Change password" %><br />
+<%= form.password_field :password %><br />
+<%= form.label :password_confirmation %><br />
+<%= form.password_field :password_confirmation %><br />
+<% unless @user.id == current_user.id %>
+  <%= select("user", "role_id", Role.find(:all).collect {|p| [ p.title, p.id ] }, { :selected => @user.role_id.to_i })%><br />
+<% end %>

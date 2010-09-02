@@ -1,0 +1,18 @@
+<div class="span-16 column outer-block center-form">
+<% form_tag admin_session_path, :class=>"login-form jNice",:id=>'src_users' do -%>
+  <div class="inner-block">
+    <label>Email Address:</label>
+    <%= text_field_tag 'login', nil, :class => "input-box" %>
+    <label>Password:</label>
+    <%= password_field_tag 'password', nil, :class => "input-box" %>
+    <p><input id="c1" type="checkbox"/> remember me</p>
+    <p>
+      <%= submit_tag '',:style=>"cursor:pointer", :class => "login-button" %>
+      <%= link_to image_tag("signup.gif", :width => "160", :height => "59", :alt => "" ), new_user_path, :style=>"cursor:pointer", :id => "signup" %>
+    </p>
+    <p class="forgot-password">
+    <a href="#forgot-box" title="" id="forgot">Forgot Password?</a></p>
+  </div>
+<% end -%>
+</div>
+

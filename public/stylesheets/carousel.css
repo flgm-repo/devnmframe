@@ -1,0 +1,24 @@
+
+.carousel_thumbs{
+  float:right !important;
+  top:435px !important;
+  _top: 265px !important;
+  right: 200px !important;
+  position: absolute !important;
+  _position : none !important;
+  width: 200px !important;
+}
+.thumb{
+  background-color: #89AEDD !important;
+  border: 0 !important;
+  float: left !important;
+  _height: 1%;
+  min-height: 0;
+  text-shadow: none !important;
+  width: 30px !important;
+}
+.thumb:hover, .thumb:active{
+  background-color: #fff !important
+  color: #000!important;
+}
+

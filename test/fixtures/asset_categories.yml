@@ -1,0 +1,11 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  name: MyString
+  required: false
+  order: 1
+
+two:
+  name: MyString
+  required: false
+  order: 1

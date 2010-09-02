@@ -1,0 +1,5 @@
+<% uploaded_images.each do |image| %>
+  <li>
+    <a href="#" title=""><img style="margin: 5px; opacity: 1;" src="<%= image.public_filename(:thumb) %>" width="50" height="50" alt="" /></a>
+    <%= link_to image_tag("close.gif", :width => "13", :height => "13", :alt => "Delete", :class => "delete_cross"), "#preview", :image_id => image.id, :class => "delete-image" %></li>
+<%end%>

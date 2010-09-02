@@ -1,0 +1,135 @@
+<div class="span-33 column outer-block block-text ">
+  <h5> Thank You for puchasing your NameFrame </h5>
+  <a href="#" onclick="print();" class="right"><%= image_tag ("icon-print.jpg", :alt => "Print", :class => "printer")%></a>
+  <a href="#" onclick="print();" class="clear print-title">Print this Page</a>
+  <div class="inner-block">
+    <div class="span-28 outer-block thank-you ">
+      <h6 class="order-info"><span class="span-10 column order-no">Order No: <%= @order.order_number  %></span><span class="span-10 amount user-mail"><%= @order.email  %></span></h6>
+      <div class="inner-block thanks_image">
+         <%= image_tag @nameframe_path, :alt=> "#{@nameframe.selected_text}", :class => "#{@nameframe.get_size[:size]}"%>
+      </div>
+      <h6 class="frame-size"><span class="frame-size-span"><%="Frame size: #{@nameframe.get_size[:frame_size]}"%></span></h6>
+    </div>
+    <!-- Order Info Box-->
+    <div class="confirm-box" >
+      <div class="span-28 last confirm-details">
+          <div class="span-9 column prepend-1">
+            <h3>Order Details</h3>
+              <span class="span-5 column">NameFrame Cost</span>
+              <span class="span-1 column">:</span>
+              <span class="span-2 column last amount">
+                <%= number_to_currency(@order.nameframe_cost) %>
+              </span>
+
+              <span class="span-5 column">Shipping Cost</span>
+              <span class="span-1 column">:</span>
+              <span class="span-2 column last amount">
+                <%= number_to_currency(@order.shipping_cost) %>
+              </span>
+
+
+              <span class="span-5 column tax">Tax</span>
+              <span class="span-1 column">:</span>
+              <span class="span-2 column last amount">
+                <%= number_to_currency(@order.tax) %>
+              </span>
+
+              <span class="span-5 column total-amount">Total</span>
+              <span class="span-1 column">:</span>
+              <span class="span-3  column last amount total-amount total-price" >
+                <%= number_to_currency(@order.total) %>
+              </span>
+
+          </div>
+          <div class="span-8 column prepend-1">
+            <h3>Billing Address</h3>
+            <p>
+              <span id="billing_name_label">
+                <%=@billing_address.first_name + ' '+ @billing_address.last_name%>
+              </span>
+              <span id="billing_address_1_label">
+                <%=@billing_address.address_1%>
+              </span>
+              <span id="billing_address_2_label">
+                <%=@billing_address.address_2%>
+              </span>
+              <span id="billing_location_label">
+                <%=@billing_address.city + ',' + @billing_address.state + ',' + 'ZIP: ' + @billing_address.zip + ',' + @billing_address.country %>
+              </span>
+            </p>
+          </div>
+          <div class="span-8 column prepend-1 last">
+            <h3>Shipping Address</h3>
+            <p>
+              <span>
+                <%=@shipping_address.first_name + ' '+ @shipping_address.last_name%>
+              </span>
+              <span>
+                <%=@shipping_address.address_1%>
+              </span>
+              <span>
+                <%=@shipping_address.address_2%>
+              </span>
+              <span>
+                <%=@shipping_address.city + ',' + @shipping_address.state + ',' + 'ZIP: ' + @shipping_address.zip + ',' +  @shipping_address.country %>
+              </span>
+            </p>
+          </div>
+          <div class="clear"></div>
+          <div class="span-8 column prepend-1 last">
+            <h3>Payment Details</h3>
+              <span class="span-5 column">Payment Type</span>
+              <span class="span-1 column">:</span>
+              <span class="span-2 column last">
+                  <%= image_tag(card_image(@order.card_type))%>
+              </span>
+          </div>
+          <div class="span-14 column prepend-1 last">
+             <h3>Shipping Method</h3>
+              <span class="span-7 column last">
+                  <%= @order.shipping_method %>, Delivery via UPS
+              </span>
+          </div>
+          <div class="clear"></div>
+          <div class="clear"></div>
+      </div>
+    </div>
+    <!-- Order Info Box-->
+  </div>
+</div>
+<!-- Google Code for Sale Conversion Page -->
+
+<script type="text/javascript">
+
+<!--
+
+var google_conversion_id = 1031490560;
+
+var google_conversion_language = "en";
+
+var google_conversion_format = "2";
+
+var google_conversion_color = "ffffff";
+
+var google_conversion_label = "HucRCNyPzwEQgJjt6wM";
+
+var google_conversion_value = 0;
+
+//-->
+
+</script>
+
+<script type="text/javascript" src="http://www.googleadservices.com/pagead/conversion.js">
+
+</script>
+
+<noscript>
+
+<div style="display:inline;">
+
+<img height="1" width="1" style="border-style:none;" alt="" src="http://www.googleadservices.com/pagead/conversion/1031490560/?label=HucRCNyPzwEQgJjt6wM&amp;guid=ON&amp;script=0"/>
+
+</div>
+
+</noscript>
+

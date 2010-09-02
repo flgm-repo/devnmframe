@@ -1,0 +1,75 @@
+<div class="span-27 column outer-block align">
+  <h5>My Jobs</h5>
+  <div class="inner-block">
+    <% for nameframe in @nameframes 
+    unless nameframe.has_checkout?
+      
+    %>
+
+    <div class="left">
+      <%= image_tag nameframe.get_image_path, :size => "200x100", :alt => "My job"%>
+    </div>
+    <ul class="account">
+      <li>
+        <%= "Name: #{nameframe.selected_text}"%>
+      </li>
+      <li>
+          <%= "Font Type: #{nameframe.font.name.capitalize}"%>
+      </li>
+
+        <% unless nameframe.frame.nil? %>
+          <%="<li>"%>
+          <%="Frame color: #{nameframe.frame.name.capitalize}"%>
+          <%="</li>"%>
+        <% end %>
+
+      <li>
+        <% unless nameframe.bottom_matt.nil? %>
+          <%= "Matt bottom color: #{nameframe.bottom_matt.name.capitalize}"%>
+        <% end %>
+      </li>
+      <li>
+        <% unless nameframe.top_matt.nil? %>
+          <%= "Matt top color: #{nameframe.top_matt.name.capitalize}"%>
+        <% end %>
+      </li>
+      <li>
+        <% unless nameframe.top_left_ornament.nil? %>
+          <%="Ornament Top Left: #{nameframe.top_left_ornament.name}"%>
+        <% end%>
+      </li>
+      <li>
+        <% unless nameframe.top_right_ornament.nil? %>
+          <%="Ornament Top Right: #{nameframe.top_right_ornament.name}"%>
+        <% end %>
+      </li>
+      <li>
+        <% unless nameframe.bottom_left_ornament.nil? %>
+          <%="Ornament Bottom Left: #{nameframe.bottom_left_ornament.name}"%>
+        <% end %>
+      </li>
+      <li>
+        <% unless nameframe.bottom_right_ornament.nil?%>
+          <%="Oranment Bottom Right: #{nameframe.bottom_right_ornament.name}"%>
+        <%end%>
+      </li>
+      <br/>
+      <br/>
+    </ul>
+    <span>Cost:<%= nameframe.calculate_cost %></span>
+    <br/>
+    <%= link_to "Edit", edit_my_account_nameframe_url(nameframe), :html_options => {:class => "right"} %>
+    <%= link_to "|Delete|", my_account_nameframe_url(nameframe), :method => :delete, :html_options => {:class => "right"} %>
+    <%if nameframe.has_checkout?%>
+      <%= link_to nameframe.checkout.status_name, my_account_order_url(nameframe.checkout), :html_options => {:class => "right"} %>
+      <hr class="clear"/>
+    <%else%>
+      <%= link_to "Checkout", checkout_my_account_nameframe_url(nameframe), :html_options => {:class => "right"} %>
+      <hr class="clear"/>
+    <%end%>
+  <%end%>
+<%end%>
+
+  </div>
+</div>
+

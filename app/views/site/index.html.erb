@@ -1,0 +1,73 @@
+<% content_for :custom_javascripts do %>
+  <%= javascript_include_tag "jquery.infinitecarousel2"%>
+  <%= javascript_include_tag "layout"%>
+<% end %>
+<!-- Intro -->
+<div class="intro span-33 ">
+  <div class="carousel_div span-17 column" id="carousel" tabindex= "0">
+      <ul>
+        <li><img alt="" src="/images/slide-3.jpg" width="560" height="330" /></li>
+        <li><img alt="" src="/images/slide-1.jpg" width="560" height="330" /></li>
+        <li><img alt="" src="/images/slide-2.jpg" width="560" height="330" /></li>
+        <li><img alt="" src="/images/slide-4.jpg" width="560" height="330" /></li>
+        <li><img alt="" src="/images/slide-5.jpg" width="560" height="330" /></li>
+      </ul>
+  </div><!--span19 -->
+  <div class="nameframe_div span-14 column last">
+    <img src="/images/intro-text.gif" alt="intro" width="404" height="161"/>
+    <p>For only $59.95 each.<br />We ship to any address in the United States and Canada.</p>
+    <p class="clear left more-nameframe">
+      <%= link_to image_tag("more_examples.gif", :alt=>""),"/images/more-nameframes/carlos.jpg", :class => "gallery", :rel => "nameframes-gallery" %>
+      <%= link_to "", "/images/more-nameframes/ethan.jpg", :class => "gallery", :rel => "nameframes-gallery" %>
+      <%= link_to "", "/images/more-nameframes/grace.jpg", :class => "gallery", :rel => "nameframes-gallery" %>
+      <%= link_to "", "/images/more-nameframes/jacob_dbl.jpg", :class => "gallery", :rel => "nameframes-gallery" %>
+      <%= link_to "", "/images/more-nameframes/joshua.jpg", :class => "gallery", :rel => "nameframes-gallery" %>
+      <%= link_to "", "/images/more-nameframes/madison.jpg", :class => "gallery", :rel => "nameframes-gallery" %>
+      <%= link_to "", "/images/more-nameframes/madison1.jpg", :class => "gallery", :rel => "nameframes-gallery" %>
+      <%= link_to "", "/images/more-nameframes/Michaelm.jpg", :class => "gallery", :rel => "nameframes-gallery" %>
+      <%= link_to "", "/images/more-nameframes/Michaelm_np.jpg", :class => "gallery", :rel => "nameframes-gallery" %>
+      <%= link_to "", "/images/more-nameframes/oliva.jpg", :class => "gallery", :rel => "nameframes-gallery" %>
+      <%= link_to "", "/images/more-nameframes/taylor.jpg", :class => "gallery", :rel => "nameframes-gallery" %>
+    </p>
+  </div>
+
+</div><!-- Intro Ends -->
+
+<!-- Directions-->
+<div class="directions span-33 enter-name clear"></div>
+<!-- Directions End-->
+<!-- Testimonials-->
+<div class="testimonial span-12 column outer-block">
+  <h5>Testimonials</h5>
+  <div class="testimonial_div inner-block">
+    <p class="testimonials"><img src="/images/upper-quote.gif" alt="" width="19" height="19"/>We absolutely love our personalized photo nameframe! It is a perfect way to display some of our favorite photos from the first six months of our daughter’s life! This is an item we will<br /> cherish forever.
+    <img src="/images/lower-quote.gif" alt="client" width="18" height="14" /></p>
+    <img src="/images/ljmsm.jpg" alt="client Jordan and Lindsay." width="70" height="90" class="right"/>
+    <p class="client-name">Jordan and Lindsay</p>
+    <a href="/site/media/testimonials" class="see-more">See more testimonials</a>
+  </div>
+</div>
+<!-- Testimonials Ends-->
+<!-- Enter Name -->
+<div class="Name span-21 column outer-block last">
+  <div class="inner-block">
+    <% form_tag "/assets/select_font", :method=>"post", :class=>"name-form" do%>
+      <fieldset>
+        <label>Enter the name as you want it to appear: (Up to 9 letters)
+          <% if session[:display_error] %>
+            <span class="error clear left">Please enter name between 1 and 9 letters or/and numbers</span>
+          <% end %>
+        </label>
+
+        <input name="name_selection" class="input-box <% if session[:display_error] %>
+               error
+                 <% session[:display_error] = false %>
+               <%end%>" type="text" /><br />
+
+        <input type="submit" value="" class="continue-nameframe" tabindex= "1"/>
+      </fieldset>
+    <%end%>
+  </div>
+</div>
+<!-- Enter Name Ends -->
+

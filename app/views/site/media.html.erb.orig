@@ -1,0 +1,54 @@
+<%#
+# To change this template, choose Tools | Templates
+# and open the template in the editor.
+%>
+<div class= "span-11 first column outer-block">
+  <ul class="media">
+    <li><a href="/site/media/in_the_news">In the News</a></li>
+    <li><a href="/site/media/press_releases">Press Releases</a></li>
+    <li><a href="/site/media/testimonials">More Testimonials</a></li>
+  </ul>
+</div>
+<div class="media_div span-22 last column outer-block">
+  <h5>Media</h5>
+  <div class="media inner-block">
+  <% @media_content.each do |media_content| %>
+    <div id="<%= media_content.id %>" class="record">
+      <%= render :partial => @media_section, :locals => {:media_content => media_content} %>
+      <% if current_user && current_user.role.title == 'administrator' %>
+<<<<<<< HEAD
+          <ul class="media-options">
+            <li><%= link_to "Modify", "#",:class => "modify-media"%> </li>
+            <li><%= link_to "Delete", "#",:class => "delete-media"%></li>
+          </ul>
+=======
+        <div class="span-4 column right last">
+          <%= link_to_remote 'Delete', :html => { :class => "delete_site_content" }, :url => admin_privileged_task_url(media_content), :method => :delete %>
+        </div>
+>>>>>>> 101954cd1a383f9a5d18191580db14c48ea529eb
+      <% end %>
+    </div>
+    <div class="clear"></div>
+  <% end %>
+  <% if current_user && current_user.role.title == 'administrator' %>
+    <% form_tag "/admin/privileged_task/create_media_content",:name=>"form_media", :id=>"form_media",:method=>"post", :class=>"customise-form", :multipart => true do %>
+      <fieldset>
+      <legend>Add Content Site</legend>
+      <label>Content: </label>
+      <%= text_area_tag "media_content[content]", nil , :class => "media-text-area text-area" %><br />
+      <label>Owner: </label>
+      <%= text_field_tag "media_content[owner]",nil,:class=> "input-box" %>
+      <label>Date of publication: </label>
+      <%= text_field_tag "media_content[publication_date]", nil, :class=> "input-box"%><br />
+      <label>Link: </label>
+      <%= text_field_tag "media_content[link]",nil, :class=> "input-box" %>
+      <label>Photo: </label>
+      <%= file_field_tag "media_content[uploaded_data]" %><br />
+      <%= hidden_field_tag :section, @media_section %><br />
+      <%= submit_tag 'Sign up', :type => "image", :src => "/images/create-user.gif" %>
+      </fieldset>
+    <% end %>
+  <% end %>
+  </div>
+</div>
+

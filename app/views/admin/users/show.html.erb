@@ -1,0 +1,16 @@
+
+<div class="span-13 column outer-block center-form">
+  <h5>Show User</h5>
+  <div class="inner-block">
+    <label class="left">Name:</label>
+    <span class="user-span"><%=h @user.name%></span><br class="clear" />
+    <label class="left">Email:</label>
+    <span class="user-span"><%=h @user.email%></span><br class="clear" />
+    <label class="left">Role:</label>
+    <span class="user-span"><%=h @user.role.title unless @user.role.nil? %></span><br class="clear" />
+
+<%= link_to image_tag ("edit-but-admin.gif", :width => "63", :height => "34", :alt => "", :class =>"edit-margin"), edit_admin_user_path(@user) %>
+<%= link_to image_tag("back-admin-large.gif", :width => "63", :height => "34", :alt => "", :class =>"edit-margin" ), admin_users_path %>
+</div>
+</div>
+

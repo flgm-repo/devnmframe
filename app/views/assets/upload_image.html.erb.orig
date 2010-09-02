@@ -1,0 +1,156 @@
+<%comment do%>
+  <%- session_key_name = ActionController::Base.session_options[:key] -%>
+  <script type="text/javascript">
+    $().ready(function() {
+      $('#uploadify').uploadify({
+        'uploader'	: '/flash/uploadify.swf',
+        'buttonImg'	: '/images/upload-photo-button.gif',
+        'width'		:	'254',
+        'height'		:	'49',
+        'cancelImg'	: '/images/cancel.png',
+        'folder'		: '/images/uploads',
+        'queueID'		: 'fileQueue',
+        'auto'			: true,
+        'multi'		: true,
+        script          : '/assets/do_upload',
+        fileDataName    : 'asset[file]',
+        scriptData      : {
+          '<%= session_key_name %>' : '<%= u cookies[session_key_name] %>',
+          'authenticity_token'  : encodeURIComponent('<%= u form_authenticity_token if protect_against_forgery? %>')
+        }
+      });
+    });
+  </script>
+<%end%>
+
+
+
+<script type='text/javascript'>
+
+  var swfu;
+
+  window.onload = function () {
+    swfu = new SWFUpload({
+      // Create the custom swfupload_photos_path in the routes.rb file
+      upload_url : '/assets/swfupload?name_frame=<%=@nameframe.uuid%>',
+
+      file_size_limit : '3 MB',
+      file_types : '*.jpg;*.jpeg;*.gif;*.bmp;*.png',
+      file_types_description : 'Image Files',
+      file_upload_limit : '<%= @remaining %>',
+
+      //file_queue_error_handler : fileQueueError,
+      file_dialog_complete_handler : fileDialogComplete,
+      upload_progress_handler : uploadProgress,
+      //upload_error_handler : uploadError,
+      upload_success_handler : uploadSuccess,
+      upload_complete_handler : uploadComplete,
+
+      // Button Settings
+      button_image_url : "/images/upload-photo-button2.gif",
+      button_placeholder_id : "spanButtonPlaceholder",
+      button_width: 254,
+      button_height: 50,
+      button_text : '<span class="button">&nbsp;</span>',
+      button_text_style : '.button { font-family: Helvetica, Arial, sans-serif; font-size: 12pt; } .buttonSmall { font-size: 10pt; }',
+      button_text_top_padding: 0,
+      button_text_left_padding: 18,
+      button_window_mode: SWFUpload.WINDOW_MODE.TRANSPARENT,
+      button_cursor: SWFUpload.CURSOR.HAND,
+
+      // Flash Settings
+
+      flash_url : "/flash/swfupload.swf",
+      custom_settings : {
+        upload_target : "divFileProgressContainer"
+      },
+      debug : false
+
+    });
+  };
+<<<<<<< HEAD
+
+  function closeFlexPopupWindow(){
+  $.fn.fancybox.close();
+  $.ajax({
+    type: "POST",
+    url: "/nameframes/get_background_image",
+    success: function{
+       $(this).addClass("done");
+
+    }
+  });
+  }
+=======
+>>>>>>> 101954cd1a383f9a5d18191580db14c48ea529eb
+</script>
+
+<div class="span-33 directions customise"></div>
+<!-- Directions End-->
+<div class="outer-block box-pad">
+  <div class="inner-list">
+    <%= render :partial=>"/shared/page_tabs" %>
+    <div class="clear"></div>
+  </div>
+</div>
+<div class="clear"></div>
+<!-- Customize Options-->
+<div class="span-11 column outer-block">
+  <h5>Customize Options</h5>
+  <div class="inner-block">
+    <form action="" method="post" class="customise-form">
+      <fieldset>
+        <div class="row row-odd">
+          <p class="no-image">
+            <%= check_box_tag "no-image", false,  false, :onclick => remote_function(:url=>without_images_assets_path, :with => "'without_images='+this.checked", :confirm => "Are you sure? All uploaded images will be deleted.", :complete => "hideButtonAddImagesToFrame();") %>
+            <span>I want my NameFrame without photos ($5 off)</span>
+          </p>
+        </div>
+        <div class="row">
+          <label class="left">Add Images:</label>
+          <% if @remaining > 0 %>
+            <span id="spanButtonPlaceholder"></span>
+          <% else%>
+          <img onclick="alert('You already uploaded SEVEN images for this nameframe.')" src="/images/upload-photo-button.gif" />
+          <% end%>
+          <p class="intimate  clear left">Maximum allowed upload: <span id="count">7 photos</span></p>
+        </div>
+        <div class="clear"></div>
+        <div class="row row-odd">
+          <label>Uploaded Images:</label><br />
+          <img id="loading" src="/images/loading.gif" class="hidden" />
+          <div id="divFileProgressContainer" class="progress_container"></div>
+          <ul id="uploaded_images" class="uploaded-images">
+            <%= render :partial => "/shared/uploaded_images", :locals => {:uploaded_images => @uploaded_images} %>
+					</ul>
+          <div class="clear"></div>
+        </div>
+        <div class="row">
+          <a id="flex" href="#flex-box" title=""><img src="/images/add-images-frame.gif" width="254" height="49" alt="" /></a>
+        </div>
+        <div class="buttons">
+          <ul>
+            <li class="back"><a href="/assets/select_ornament" title="">Back</a></li>
+          </ul>
+          <div class="clear"></div>
+        </div>
+
+      </fieldset>
+    </form>
+  </div>
+</div>
+
+<!-- Customize Options Ends-->
+
+<!-- Preview Frame -->
+<div id="image_preview" class="span-22 column outer-block last">
+  <%= render :partial=>"/shared/frame_preview", :locals => {:cost => @cost} %>
+</div>
+<!-- Preview Frame Ends -->
+
+
+<!-- Flex -->
+<div id="flex-box" style="display:none;">
+  <%= render :partial=>"/shared/flex" %>
+</div>
+<%= javascript_include_tag "upload_images" %>

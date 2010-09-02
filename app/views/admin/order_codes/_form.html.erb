@@ -1,0 +1,38 @@
+<% content_for :custom_stylesheets do %>
+  <%= stylesheet_link_tag 'jquery-ui/jquery-ui-1.8.1.custom' %>
+<% end %>
+<% content_for :custom_javascripts do %>
+  <%= javascript_include_tag "jquery-ui-1.8.1.custom.min", "jquery-ui-calendar", "order_codes" %>
+<% end %>
+<div class="row">
+  <div class="span-11">
+  		<label>Code: <span class="error"></span></label>
+  		<%= form.text_field :code, :class => "input-box span-10" %>
+  	</div>
+  </div>
+  <div class="row">
+  	<div class="span-11">
+  		<label>Discount (%): <span class="error"></span></label><br />
+  		<%= form.text_field :discount, :readonly => false, :class => "input-box span-10" %>
+  	</div>
+  </div>
+  <div class="row clear">
+  	<div class="span-11 column">
+  	  <label>Users Quantity: <span class="error"></span></label><br />
+      <%= form.text_field :users_quantity, :disabled => code.indefinite_users?, :value => code.allowed_users, :class => "input-box left span-5" %>
+      <%= form.check_box :indefinite_users, :checked => code.indefinite_users?, :class => "left pull3 span-5" %><%= form.label :indefinite_users, "Indefinite", :class => "options" %>
+  	</div>
+  </div>
+  <div class="row">
+  	<div class="span-11">
+  		<label>Start Date: <span class="error"></span></label>
+  		<%= form.text_field :start_date, :class => "input-box span-10 datepicker" %>
+  	</div>
+  </div>
+  <div class="row">
+	<div class="span-11">
+		<label>End Date: <span class="error"></span></label>
+		<%= form.text_field :end_date, :class => "input-box span-10 datepicker" %>
+	</div>
+</div>
+

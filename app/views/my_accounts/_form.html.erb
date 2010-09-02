@@ -1,0 +1,22 @@
+<div class="row">
+	<div class="span-11">
+		<label>Name: <span class="error"></span></label>
+		<%= form.text_field :name, :class => "input-box span-10" %>
+	</div>
+</div>
+<div class="row">
+	<div class="span-11">
+		<label>Email Address: <span class="error"></span></label>
+		<%= form.text_field :email, :readonly => false, :class => "input-box span-10" %>
+	</div>
+</div>
+<div class="row">
+	<div class="span-11 column">
+	  <%= form.label :password, form.object.new_record? ? nil : "Change password" %>
+		<%= form.password_field :password, :class => "input-box span-10" %>
+	</div>
+	<div class="span-11 column">
+		<%= form.label :password_confirmation %>
+		<%= form.password_field :password_confirmation, :class => "input-box span-10" %>
+	</div>
+</div>

@@ -1,0 +1,29 @@
+<div class="login-container" id="login">
+  <h5>Login</h5>
+  <div class="notice" style="display:none" id="div_login_notice"></div>
+  <%#  flash[:login_notice] = nil %>
+
+
+  <%#= hidden_field_tag("id", @project2.id) %>
+
+  <% form_tag session_path, :class=>"login-form jNice",:id=>'src_users' do -%>
+    <%#*<form class="login-form jNice" action="" method="post">%>
+    <fieldset>
+      <label>Email Address:</label>
+      <%#*<input type="text" name="text" class="input-box" />%>
+      <%= text_field_tag 'login', nil, :class => "input-box" %>
+      <label>Password:</label>
+      <%#*<input type="password" name="password" class="input-box" />%>
+      <%= password_field_tag 'password', nil, :class => "input-box" %>
+      <p><input id="c1" type="checkbox"/> remember me</p>
+
+      <p>
+        <%#*<button onclick="$('src_users').onsubmit(); return false;" type="submit" value="submit" class="login-button"></button>%>
+        <%= submit_tag '',:style=>"cursor:pointer", :class => "login-button" %>
+        <%= link_to image_tag("signup.gif", :width => "160", :height => "59", :alt => "" ), new_user_path, :style=>"cursor:pointer" %>
+      </p>
+      <p class="forgot-password">
+      <a href="#forgot-box" title="" id="forgot">Forgot Password?</a></p>
+    </fieldset>
+  <% end %>
+</div>

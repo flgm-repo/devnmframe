@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:fisheye="com.pag.fisheye.*" 
+	xmlns:menu="com.pag.menu.*" 
+	xmlns:fx="com.fusiox.ui.*"
+	width="975" height="100" backgroundColor="#ffffff" cornerRadius="20" borderStyle="solid" borderColor="#ffffff"
+	verticalScrollPolicy="off" horizontalScrollPolicy="off" rollOver="onRollOverHandler()" rollOut="onRollOutHandler()" clipContent="false">
+	
+	<mx:Script>
+		<![CDATA[
+			
+			public function onRollOverHandler():void
+			{
+				inactivityIndicator.visible = false;	
+				inactivityIndicator.includeInLayout = false;	
+			}
+			
+			public function onRollOutHandler():void
+			{
+				inactivityIndicator.visible = true;	
+				inactivityIndicator.includeInLayout = true;	
+			} 
+			
+		]]>
+	</mx:Script>
+	
+	<mx:Fade duration="250" id="fader"/>
+	
+	<fisheye:FishEye id="fishEye" left="20" paddingTop="5"
+		rolloverScale="1.25"  itemHeight="50" itemWidth="110" 
+		verticalAlign="middle" horizontalAlign="center" 
+		horizontalScrollPolicy="off" verticalScrollPolicy="off"
+		width="100%" height="100%" horizontalGap="30" clipContent="false">
+		
+		<menu:FishEyeMenuItem menuItemType="wishlistIcon" labelText="wishlist"/>
+		<menu:FishEyeMenuItem menuItemType="reminderIcon" labelText="reminders"/>
+		<menu:FishEyeMenuItem menuItemType="eStatementIcon" labelText="eStatement"/>
+		<menu:FishEyeMenuItem menuItemType="profileIcon" labelText="profile"/>
+		<menu:FishEyeMenuItem menuItemType="widgetsIcon" labelText="widgets"/>
+			
+	</fisheye:FishEye>
+
+	
+	<mx:Canvas top="1" left="1" id="inactivityIndicator" width="100%" height="100%" backgroundColor="#5D5D5D" cornerRadius="20" borderStyle="solid" borderColor="#5D5D5D" backgroundAlpha="0.5" 
+		showEffect="{fader}" hideEffect="{fader}"/>
+
+</mx:Canvas>

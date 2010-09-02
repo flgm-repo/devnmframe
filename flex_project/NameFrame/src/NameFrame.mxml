@@ -1,0 +1,1198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" backgroundGradientColors="[#ffffff, #ffffff]" width="900" height="700"
+				creationComplete="onCreationComplete();" click="if( event.target == this ) objectHandles.selectionManager.clearSelection();" verticalScrollPolicy="off" horizontalScrollPolicy="off" xmlns:fisheye="com.pag.fisheye.*" xmlns:common="com.common.*">
+
+	<mx:Script>
+		<![CDATA[
+			import mx.managers.CursorManager;
+			import mx.graphics.codec.JPEGEncoder;
+			import com.nameframe.utils.NameframeUtils;
+			import mx.charts.chartClasses.NumericAxis;
+			import mx.controls.ToolTip;
+			import mx.managers.ToolTipManager;
+			import mx.events.FlexEvent;
+			import com.roguedevelopment.objecthandles.constraints.MaintainProportionConstraint;
+			import com.adobe.images.JPGEncoder;
+			import mx.graphics.ImageSnapshot;
+			import com.adobe.serialization.json.JSON;
+			import mx.utils.Base64Encoder;
+			import com.pfp.utils.JPEGAsyncEncoder;
+			import mx.managers.PopUpManager;
+			import com.common.Window;
+			import com.roguedevelopment.objecthandles.SelectionEvent;
+			import com.roguedevelopment.objecthandles.constraints.SizeConstraint;
+			import com.roguedevelopment.objecthandles.HandleRoles;
+			import com.roguedevelopment.objecthandles.HandleDescription;
+			import com.roguedevelopment.objecthandles.example.DegrafaHandle;
+			import com.roguedevelopment.objecthandles.example.SimpleFlexShape;
+			import com.roguedevelopment.objecthandles.example.SimpleDataModel;
+			import com.roguedevelopment.objecthandles.ObjectHandles;
+			import mx.containers.Canvas;
+			import mx.rpc.events.HeaderEvent;
+			import mx.controls.Alert;
+			import com.pfp.events.JPEGAsyncCompleteEvent;
+			import mx.core.UIComponent;
+			import mx.collections.ArrayCollection;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+
+			[Embed("/assets/trashBinOptimized.png")]
+			private var trashSource:Class;
+
+			private var uuid:String = "";
+			private var _font:String = "";
+			private var theName:String = "";
+			private var _currentSelectedThumbnailImageIndex:int = -1;
+			private var _currentSelectedThumbnailImage:NameFrameImage;
+
+			protected var objectHandles:ObjectHandles;
+			public var flexModel:SimpleDataModel;
+			public var simpleFlexShape:SimpleFlexShape;
+			public var simpleFlexShapeFrontProxy:Canvas;
+			public var simpleFlexShapeStretchableProxy:Canvas;
+			private var _selectedSimpleFlexShape:SimpleFlexShape;
+			private var _selectedSimpleFlexShapeProxy:Canvas;
+			private var _selectedSimpleFlexShapeStretchableProxy:Canvas;
+			private var _startSelectedFlexShapeModelX:Number = 0;
+			private var _selectedNameFrameImage:NameFrameImage;
+			private var _selectedSimpleFlexShapes:Array = new Array();
+			private var _myToolTip:ToolTip;
+
+			private var startPoint:Point;
+			private var posPoint:Point;
+			private var mtrx:Matrix;
+			private var cropBD:BitmapData;
+			private var loadBD:BitmapData;
+			private var win:Window = new Window();
+
+			//used to properly set the correct scaled image.
+			private var _totalFrameLetters:int = 0;
+			private var _selectedFontFamily:String = "";
+			public var image:Image;
+			public var finalDPI:int = 72;
+			public var isMaskStretchable:Boolean = false;
+			private var _snapshotXScaling:Number = 0;
+			private var _snapshotYScaling:Number = 0;
+			private var _objectHandleSizeScaling:Number;
+			private var _fontHeightScaling:Number = 0;
+			private var _fontWidthScaling:Number = 0;
+			private var _sizeContraintMaxWidth:Number = 500;
+			private var _sizeContraintMaxHeight:Number = 500;
+
+			//for setting the proper location and sizes for each object handles
+			public var originX:Number = 0;
+			public var originY:Number = 0;
+			public var totalTextWidth:Number = 0;
+			public var totalHeight:Number = 0;
+			public var totalSpaceWidth:Number = 0;
+			public var fontDimensionsCollection:Array = [];
+			public var space:Number = 0;
+
+			//sets the intended final dimension for small, medium and large frames
+			/*
+			   THIS METHOD IS THE LOGIC TO FOLLOW THIS RULE:
+			   1-3 letters : 8x12
+			   expected pixels : 576 x 864
+			   8 x 72 = 576
+			   12 x 72 = 864
+
+			   3-6 letters : 8x18
+			   expected pixels : 576 x 1296
+			   8 x 72 = 765
+			   18 x 72 = 1296
+
+			   7-9 letters : 8x24
+			   expected pixels : 576 x 1728
+			   8 x 72 = 765
+			   24 x 72 = 1728
+			 */
+			public var smallFrame:Object;
+			public var mediumFrame:Object;
+			public var bigFrame:Object;
+
+			//border objects used to solve for the cropped inner frame dimension and the original x and y
+			public var smallBorderObject:Object = {leftBorder: 34.86,rightBorder: 36.54,topBorder: 35.70,bottomBorder: 36.54};
+			public var mediumBorderObject:Object = {leftBorder: 34,rightBorder: 34,topBorder: 40,bottomBorder: 35};
+			public var largeBorderObject:Object = {leftBorder: 38.22,rightBorder: 37.8,topBorder: 37.8,bottomBorder: 37.8};
+
+			//need for cropped image resizing
+			private var _croppedImageWidth:Number = 660;
+			private var _croppedImageHeight:Number = 340;
+			private var _croppedImageStartX:Number = 120;
+			private var _croppedImageStartY:Number = 185;
+
+
+			// Declare bindable properties in Application scope.
+			[Bindable]
+			public var nameframe_uuid:String;
+
+			[Bindable]
+			public var font:String;
+			
+			//--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			//
+			//
+			//  Handler Methods
+			//
+			//
+			//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			private function onCreationComplete():void
+			{
+
+				var cacheBypasser:Number = Math.round(Math.random() * 1000);	
+				try
+				{
+					trace("The try block ran successfully.");
+
+					getFlashVarsService.url = Application.application.url.replace("/flex/NameFrame.swf","") + "/assets/get_flash_vars/" + uuid + "?foo=" + cacheBypasser;
+					getFlashVarsService.send();
+
+				}
+				catch (erObject:Error)
+				{
+					trace("An error was thrown.");
+				}
+			}
+					
+			protected function simpleFlexShapeFrontProxyClickedHandler(event:MouseEvent):void
+			{
+				_selectedSimpleFlexShapeProxy = null;
+				_selectedSimpleFlexShapeProxy = event.currentTarget as Canvas;
+
+				var selectedSimpleFlexShapeFrontProxyName:String = (event.currentTarget as Canvas).name as String;
+				var correspondingSelectedSimpleFlexShapeName:String = selectedSimpleFlexShapeFrontProxyName.replace("simpleFlexShapeFrontProxy","simpleFlexShape");
+				_selectedSimpleFlexShape = this.getChildByName(correspondingSelectedSimpleFlexShapeName) as SimpleFlexShape;
+
+				if (event.shiftKey)
+				{
+					if (objectHandles.selectionManager.isSelected(_selectedSimpleFlexShape))
+					{
+						removeFromSelectedSimpleFlexShapes(parseInt((_selectedSimpleFlexShape.name).replace("simpleFlexShape","")));
+						objectHandles.selectionManager.removeFromSelected(_selectedSimpleFlexShape);
+					}
+					else
+					{
+						_selectedSimpleFlexShapes.push(parseInt((_selectedSimpleFlexShape.name).replace("simpleFlexShape","")));
+						objectHandles.selectionManager.addToSelected(_selectedSimpleFlexShape);
+					}
+				}
+				else
+				{
+					_selectedSimpleFlexShapes = null;
+					_selectedSimpleFlexShapes = new Array();
+					_selectedSimpleFlexShapes.push(parseInt((_selectedSimpleFlexShape.name).replace("simpleFlexShape","")));
+					_selectedSimpleFlexShape.dispatchEvent(new MouseEvent(SelectionEvent.SELECTED));
+				}
+			}
+			
+			private function clickedAddEventHandler(event:Event):void
+			{
+				_currentSelectedThumbnailImage = event.currentTarget as NameFrameImage;
+
+				if (_selectedSimpleFlexShapes.length == 1)
+				{
+					setSelectedSimpleFlexShape();
+					setSelectedSimpleFlexShapeProxy();
+
+					//makes the selected bounding box to be the topmost  bounding box of all the bounding boxes.
+					this.setChildIndex(_selectedSimpleFlexShape,_totalFrameLetters);
+
+					//adds mask to the selected bounding box
+					_selectedSimpleFlexShape.mask = _selectedSimpleFlexShapeProxy;
+					//sets the selected thumbnail image to the selected bounding box background
+					_selectedSimpleFlexShape.loadAsBackground((_currentSelectedThumbnailImage.source)["large-filename"]);
+					_selectedSimpleFlexShape.largeFilenameID = (_currentSelectedThumbnailImage.source)["id"];
+					_selectedSimpleFlexShape.isMaskStretchable = false;
+					//updates the display
+					resetAllSelectedHandleObjects();
+					invalidateProperties();
+					invalidateSize();
+				}
+				else if (_selectedSimpleFlexShapes.length > 1)
+				{
+					setSelectedSimpleFlexShape();
+					//setSelectedSimpleFlexShapeProxy();
+					setSelectedSimpleFlexShapeStretchableProxy();
+					setSelectedSimpleFlexShapeStretchableProxyWidth();
+					//makes the selected bounding box to be the topmost  bounding box of all the bounding boxes.
+					this.setChildIndex(_selectedSimpleFlexShape,_totalFrameLetters);
+
+					//fixes the issue of image not covering the whole selected fonts area when previous image was already set.
+					_selectedSimpleFlexShape.model.x = _startSelectedFlexShapeModelX;
+								
+					//adds mask to the selected bounding box
+					_selectedSimpleFlexShape.model.width = _selectedSimpleFlexShapeStretchableProxy.width;
+					_selectedSimpleFlexShape.mask = _selectedSimpleFlexShapeStretchableProxy;
+					//sets the selected thumbnail image to the selected bounding box background
+					_selectedSimpleFlexShape.loadAsBackground((_currentSelectedThumbnailImage.source)["large-filename"]);
+					_selectedSimpleFlexShape.largeFilenameID = (_currentSelectedThumbnailImage.source)["id"];
+					_selectedSimpleFlexShape.isMaskStretchable = true;
+
+					//updates the display
+					resetAllSelectedHandleObjects();
+					invalidateProperties();
+					invalidateSize();
+				}
+			}
+			
+			protected function trashBtnClicked(event:MouseEvent):void
+			{
+				var tempSimpleFlexShapeName:String; 
+				var correspondingTempSimpleFlexShapeProxyName:String ;
+				var chosenSimpleFlexShapeFrontProxy:Canvas;
+				
+				if (_selectedSimpleFlexShapes.length == 1)
+				{
+					_selectedSimpleFlexShape.loadAsBackground(null);
+					_selectedSimpleFlexShape.largeFilenameID = null;
+					
+					
+					//resets the mask ands  the bounding box to original
+					tempSimpleFlexShapeName = _selectedSimpleFlexShape.name;
+					correspondingTempSimpleFlexShapeProxyName = tempSimpleFlexShapeName.replace("simpleFlexShape","simpleFlexShapeFrontProxy");
+					chosenSimpleFlexShapeFrontProxy = this.getChildByName(correspondingTempSimpleFlexShapeProxyName) as Canvas;
+					_selectedSimpleFlexShape.mask = null;
+					_selectedSimpleFlexShape.model.x = chosenSimpleFlexShapeFrontProxy.x;
+					_selectedSimpleFlexShape.model.y = chosenSimpleFlexShapeFrontProxy.y;
+					_selectedSimpleFlexShape.model.width = chosenSimpleFlexShapeFrontProxy.width;
+					_selectedSimpleFlexShape.model.height = chosenSimpleFlexShapeFrontProxy.height;
+					_selectedSimpleFlexShape.isMaskStretchable = false;
+
+				}
+				else if (_selectedSimpleFlexShapes.length > 1)
+				{
+					for each ( var index:int in _selectedSimpleFlexShapes )
+					{
+						var selectedSimpleFlexShapeName:String = "simpleFlexShape" + index;
+						_selectedSimpleFlexShape = this.getChildByName(selectedSimpleFlexShapeName) as SimpleFlexShape;
+						_selectedSimpleFlexShape.loadAsBackground(null);
+						_selectedSimpleFlexShape.largeFilenameID = null;
+						
+						//resets the mask and the bounding box to original
+						tempSimpleFlexShapeName = _selectedSimpleFlexShape.name;
+						correspondingTempSimpleFlexShapeProxyName = tempSimpleFlexShapeName.replace("simpleFlexShape","simpleFlexShapeFrontProxy");
+						chosenSimpleFlexShapeFrontProxy = this.getChildByName(correspondingTempSimpleFlexShapeProxyName) as Canvas;
+						_selectedSimpleFlexShape.mask = null;
+						_selectedSimpleFlexShape.model.x = chosenSimpleFlexShapeFrontProxy.x;
+						_selectedSimpleFlexShape.model.y = chosenSimpleFlexShapeFrontProxy.y;
+						_selectedSimpleFlexShape.model.width = chosenSimpleFlexShapeFrontProxy.width;
+						_selectedSimpleFlexShape.model.height = chosenSimpleFlexShapeFrontProxy.height;
+						_selectedSimpleFlexShape.isMaskStretchable = false;
+					}
+				}
+			}
+			
+			protected function uploadCompleted(event:Event):void
+			{	
+				//CursorManager.removeBusyCursor();
+				getAllDimensions();					
+			}
+			
+			//--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			//
+			//
+			//  SERVER RESPONSE Result Handler Methods
+			//
+			//
+			//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			protected function getFlashVarsResultHandler(event:ResultEvent):void
+			{
+				//sample JSON text returned from the server
+				//{"font":"arial","name":"Nameframe","nameframe_uuid":"ae65cf06-6891-4b5b-865e-739fff371d2c"}
+				
+				//get the raw JSON data and cast to String
+				var rawData:String = String(event.result);
+
+				//decode the data to ActionScript using the JSON API
+				//in this case, the JSON data is a serialize Array of Objects.
+				var flashVarsObject:Object = (JSON.decode(rawData) as Object);
+
+				//pass the ArrayCollection to the DataGrid as its dataProvider.
+				if (flashVarsObject != null )
+				{
+					var cacheBypasser:Number = Math.round(Math.random() * 1000);
+					smallFrame = {height: 8 * finalDPI,width: 12 * finalDPI};
+					mediumFrame = {height: 8 * finalDPI,width: 18 * finalDPI};
+					bigFrame = {height: 8 * finalDPI,width: 24 * finalDPI};
+	
+					try
+					{
+						trace("The try block ran successfully.");
+						uuid = flashVarsObject.nameframe_uuid as String;
+						theName = flashVarsObject.name as String;
+						_font = flashVarsObject.font as String;
+	
+						//set the selected font family
+						_selectedFontFamily = _font;
+	
+						img.source = getPreviewSource();
+						httpService.url = Application.application.url.replace("/flex/NameFrame.swf","") + "/assets/get_text_dimensions/" + uuid + "?foo=" + cacheBypasser;
+						imageService.url = Application.application.url.replace("/flex/NameFrame.swf","") + "/assets/get_uploaded_images/" + uuid + "?foo=" + cacheBypasser;
+						httpService.send();
+	
+					}
+					catch (erObject:Error)
+					{
+						Alert.show("No Session ID found. Please inform your system administrator.");
+					}
+				}
+			}
+			
+			protected function httpServiceResultHandler(event:ResultEvent):void
+			{
+				var xml:XML = new XML(event.result as String);
+
+				totalTextWidth = 0;
+				totalHeight = 0;
+				totalSpaceWidth = 0;
+
+				_totalFrameLetters = xml.children().length() - 1;
+
+				for (var i:int = 0;i < xml.children().length();i++)
+				{
+					var obj:Object = new Object();
+					obj["character"] = (xml.children()[i] as XML).child("character");
+					obj["kerning"] = new Number((xml.children()[i] as XML).child("kerning"));
+					obj["width"] = new Number((xml.children()[i] as XML).child("width"));
+					obj["height"] = new Number((xml.children()[i] as XML).child("height"));
+
+					//if the letter is the first letter
+					if (i == 0)
+					{
+						//sets the total width of all letters plus spaces
+						totalTextWidth = new Number((xml.children()[i] as XML).child("width"));
+						_sizeContraintMaxWidth = new Number((xml.children()[i] as XML).child("frame-width"));
+						_sizeContraintMaxHeight = new Number((xml.children()[i] as XML).child("frame-heigth"));
+						//border
+						setBorderObject(new Number((xml.children()[i] as XML).child("left-border-size")),new Number((xml.children()[i] as XML).child("right-border-size")),new Number((xml.children()[i] as XML).child("top-border-size")),new Number((xml.children()[i] as XML).child("bottom-border-size")));
+
+						space = obj["kerning"] as Number;
+					}
+					else
+					{
+						//set totalheight to the height of the tallest letter							
+						totalHeight = obj["height"] > totalHeight ? obj["height"] : totalHeight;
+					}
+					fontDimensionsCollection.push(obj);
+				}
+
+				var colors:Array = [0xff0000,0x00ff00,0x0000ff]
+
+				setOriginXAndY(space);
+
+				objectHandles = new ObjectHandles(this,null,new ClassFactory(DegrafaHandle));
+
+				objectHandles.defaultHandles.push(new HandleDescription(HandleRoles.MOVE,new Point(50,50),new Point(0,0)));
+
+				//notice array starts on the second element.	
+				for (var j:int = 1;j < fontDimensionsCollection.length;j++)
+				{
+					var dimensionsObject:Object = fontDimensionsCollection[j];
+
+					//the actual image background image ( BACK  OF FONTS ) 
+					simpleFlexShape = new SimpleFlexShape();
+					simpleFlexShape.name = "simpleFlexShape" + j.toString();
+					//adds child at the 2nd layer from the bottom layer
+					this.addChildAt(simpleFlexShape,0);
+
+					//this will serve as the mask for the image when user selects more than one font
+					simpleFlexShapeStretchableProxy = new Canvas();
+					simpleFlexShapeStretchableProxy.setStyle("backgroundColor","#FFFFFF");
+					simpleFlexShapeStretchableProxy.alpha = 0.0;
+					simpleFlexShapeStretchableProxy.name = "simpleFlexShapeStretchableProxy" + j.toString();
+					simpleFlexShapeStretchableProxy.x = originX;
+					simpleFlexShapeStretchableProxy.y = originY;
+					simpleFlexShapeStretchableProxy.width = (dimensionsObject["width"] as Number) + space;
+					simpleFlexShapeStretchableProxy.height = (dimensionsObject["height"] as Number);
+					//adds child at the top layer
+					this.addChildAt(simpleFlexShapeStretchableProxy,getChildren().length);
+
+					//the actual image background image proxy ( FRONT  OF FONTS ) which the user can click on and
+					//this also serves as the mask for the image when a single font is selected.
+					simpleFlexShapeFrontProxy = new Canvas();
+					simpleFlexShapeFrontProxy.alpha = 0.6;
+					simpleFlexShapeFrontProxy.useHandCursor = true;
+					simpleFlexShapeFrontProxy.buttonMode = true;
+					simpleFlexShapeFrontProxy.name = "simpleFlexShapeFrontProxy" + j.toString();
+					simpleFlexShapeFrontProxy.x = originX;
+					simpleFlexShapeFrontProxy.y = originY;
+					simpleFlexShapeFrontProxy.width = (dimensionsObject["width"] as Number) + space;
+					simpleFlexShapeFrontProxy.height = (dimensionsObject["height"] as Number);
+					simpleFlexShapeFrontProxy.addEventListener(MouseEvent.CLICK,simpleFlexShapeFrontProxyClickedHandler);
+					//adds child at the top layer
+					this.addChildAt(simpleFlexShapeFrontProxy,getChildren().length);
+
+					//this is needed for registering the object handle for the corresponding SimpleFlexShape.
+					flexModel = new SimpleDataModel();
+					simpleFlexShape.model = flexModel;
+					flexModel.x = originX;
+					flexModel.y = originY;
+					flexModel.width = (dimensionsObject["width"] as Number) + space;
+					flexModel.height = (dimensionsObject["height"] as Number);
+					objectHandles.registerComponent(flexModel,simpleFlexShape);
+
+					originX = originX + flexModel.width - 1;
+
+					//below enables corner handle movement  to proportionally resize the object handles/bounding box 
+					var constraint:MaintainProportionConstraint = new MaintainProportionConstraint();
+					objectHandles.constraints.push(constraint);
+
+					var constraint2:SizeConstraint = new SizeConstraint();
+					constraint2.minWidth = 20;
+					constraint2.minHeight = 20;
+					constraint2.maxWidth = _sizeContraintMaxWidth;
+					constraint2.maxHeight = _sizeContraintMaxHeight;
+					objectHandles.constraints.push(constraint2);
+				}
+
+				if (fontDimensionsCollection.length != 0)
+				{
+					this.setChildIndex(imgGridCanvas,0);
+					setTimeout(imageService.send,1000);
+				}
+
+			}
+					
+			public function updateHTMLFrameResultHandler(event:ResultEvent):void
+			{
+				statusLayer.visible = false;
+				statusLayer.includeInLayout = false;
+				closeFlexPopupWindowFlex();
+			}
+
+			public function saveImageServiceResultHandler(event:ResultEvent):void
+			{
+				var res:String = event.result.toString();
+				if (res == "success")
+				{
+					getAllDimensions();
+				}
+				else
+				{
+				}
+			}
+			
+			protected function imageServiceResultHandler(event:ResultEvent):void
+			{
+				var xml:XML = new XML(event.result as String);
+				var imgs:Array = [];
+
+				for (var i:int = 0;i < xml.children().length();i++)
+				{
+					var obj:Object = new Object();
+					obj["thumb-filename"] = (xml.children()[i] as XML).child("thumb-filename");
+					obj["large-filename"] = (xml.children()[i] as XML).child("large-filename");
+					obj["id"] = (xml.children()[i] as XML).child("id");
+
+					var img:NameFrameImage = new NameFrameImage();
+					img.source = obj;
+					img.width = 60;
+					img.height = 60;
+					img.addEventListener(MouseEvent.MOUSE_OVER,addImageShowToolTipAbovePrerequisite,false,0,true);
+					img.addEventListener(MouseEvent.MOUSE_OUT,killToolTip,false,0,true);
+					img.name = "backGroundImageThumbName" + i.toString();
+					img.addEventListener("clickedAdd",clickedAddEventHandler);
+					hb.addChild(img);
+				}
+
+			}
+			
+			public function saveAddedImagePropResultHandler(event:ResultEvent):void
+			{
+
+				var response:String = event.result.toString();
+				if (response == "success")
+				{
+					//set saveImageService url
+					updateHTMLFrameService.url = Application.application.url.replace("/flex/NameFrame.swf","") + "/assets/update_html_frame";
+					//Send data to server
+					updateHTMLFrameService.send();
+				}
+				else
+				{
+				}
+			}
+
+			public function sessionImagePropertiesServiceResultHandler(event:ResultEvent):void
+			{
+				//get the raw JSON data and cast to String
+				var rawData:String = String(event.result);
+
+				//decode the data to ActionScript using the JSON API
+				//in this case, the JSON data is a serialize Array of Objects.
+				var arr:Array = (JSON.decode(rawData) as Array);
+
+				//create a new ArrayCollection passing the de-serialized Array
+				//ArrayCollections work better as DataProviders, as they can
+				//be watched for changes.
+				var dp:ArrayCollection = new ArrayCollection(arr);
+
+				//pass the ArrayCollection to the DataGrid as its dataProvider.
+				if (dp.length > 0)
+				{
+					setAddedImageCustomization(dp);
+				}
+			}
+			
+			private function setAddedImageCustomization(dataProvider:ArrayCollection):void
+			{
+				for each (var customization:Object in dataProvider)
+				{
+					//var tempSimpleFlexShape:SimpleFlexShape = this.getChildAt(customization["letter_position"]) as SimpleFlexShape;
+					var tempSimpleFlexShape:SimpleFlexShape = this.getChildByName(customization["letter_position"]) as SimpleFlexShape;
+					var tempSimpleFlexShapeName:String;
+
+					if (customization["is_mask_stretchable"] == true)
+					{
+						//for masking effect
+						tempSimpleFlexShape.isMaskStretchable = true;
+						tempSimpleFlexShapeName = tempSimpleFlexShape.name;
+						var simpleFlexShapeStretchableProxyName:String = tempSimpleFlexShapeName.replace("simpleFlexShape","simpleFlexShapeStretchableProxy");
+						var smpleFlexShapeStretchableProxy:Canvas = this.getChildByName(simpleFlexShapeStretchableProxyName) as Canvas;
+						smpleFlexShapeStretchableProxy.width = customization["stretched_image_width"];
+						smpleFlexShapeStretchableProxy.height = customization["stretched_image_height"];
+						tempSimpleFlexShape.mask = smpleFlexShapeStretchableProxy;
+
+						//we need to ADD the _croppedImageStartX and _croppedImageStartY to
+						//corresponding x and y to change the (0,0) reference to the frame image itself 
+						//and not the whole flex application (0,0) reference.
+						tempSimpleFlexShape.model.x = customization["x"] + _croppedImageStartX;
+						tempSimpleFlexShape.model.y = customization["y"] + _croppedImageStartY;
+
+						tempSimpleFlexShape.model.width = customization["width"];
+						tempSimpleFlexShape.model.height = customization["height"];
+						tempSimpleFlexShape.model.rotation = customization["rotation"];
+						tempSimpleFlexShape.largeFilenameID = customization["id"];
+						tempSimpleFlexShape.loadAsBackground(customization["large_filename"]);
+					}
+					else if (customization["is_mask_stretchable"] == false)
+					{
+						//for masking effect
+						tempSimpleFlexShapeName = tempSimpleFlexShape.name;
+						var correspondingTempSimpleFlexShapeProxyName:String = tempSimpleFlexShapeName.replace("simpleFlexShape","simpleFlexShapeFrontProxy");
+						var chosenSimpleFlexShape:Canvas = this.getChildByName(correspondingTempSimpleFlexShapeProxyName) as Canvas;
+						tempSimpleFlexShape.mask = chosenSimpleFlexShape;
+
+						//we need to ADD the _croppedImageStartX and _croppedImageStartY to
+						//corresponding x and y to change the (0,0) reference to the frame image itself 
+						//and not the whole flex application (0,0) reference.
+						tempSimpleFlexShape.model.x = customization["x"] + _croppedImageStartX;
+						tempSimpleFlexShape.model.y = customization["y"] + _croppedImageStartY;
+
+						tempSimpleFlexShape.isMaskStretchable = false;
+						tempSimpleFlexShape.model.width = customization["width"];
+						tempSimpleFlexShape.model.height = customization["height"];
+						tempSimpleFlexShape.model.rotation = customization["rotation"];
+						tempSimpleFlexShape.largeFilenameID = customization["id"];
+						tempSimpleFlexShape.loadAsBackground(customization["large_filename"]);
+					}
+				}
+			}
+			
+			//--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			//
+			//
+			//  SERVER RESPONSE Fault Handler Methods
+			//
+			//
+			//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			protected function httpServiceFaultHandler(event:FaultEvent):void
+			{
+				Alert.show("Could not load Dimensions" + "\n" + event.toString());
+			}
+			
+			protected function imageServiceFaultHandler(event:FaultEvent):void
+			{
+				Alert.show("Could not load imagesimageService" + "\n" + event.toString());
+			}
+			
+			protected function updateHTMLFrameServiceFaultHandler(event:FaultEvent):void
+			{
+				Alert.show("Error in service that updates the HTML frame." + "\n" + event.toString());
+				
+				if ( statusLayer.visible == true )
+				{
+					statusLayer.visible = false;
+					statusLayer.includeInLayout = false;
+				}
+			}
+			
+			protected function saveAddedImagePropServiceFaultHandler(event:FaultEvent):void
+			{
+				Alert.show("Error in service that saves added images properties." + "\n" + event.toString());
+				
+				if ( statusLayer.visible == true )
+				{
+					statusLayer.visible = false;
+					statusLayer.includeInLayout = false;
+				}
+			}
+			
+			protected function saveImageServiceFaultHandler(event:FaultEvent):void
+			{
+				Alert.show("Error in uploading the image to the server." + "\n" + event.toString());
+				
+				if ( statusLayer.visible == true )
+				{
+					statusLayer.visible = false;
+					statusLayer.includeInLayout = false;
+				}
+			}
+
+
+			//--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			//
+			//
+			//  HELPER METHODS
+			//
+			//
+			//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+						protected function setBorderObject(leftBorder:Number,rightBorder:Number,topBorder:Number,bottomBorder:Number):void
+			{
+				//TAKE NOTE OF THE ADDED CALIBRATIONS FOR A GIVEN FONT FAMILY				
+				if (_totalFrameLetters <= 3)
+				{
+					//Tom Lousianne, pictures need to move up 1/16" and to the left 1/16 = 4.5 pixels up and 4.5 pixels left
+					if (_selectedFontFamily == "louisianne")
+					{
+						smallBorderObject["leftBorder"] = leftBorder + (4.5 * 0.42);
+						smallBorderObject["rightBorder"] = rightBorder - (4.5 * 0.42);
+						smallBorderObject["topBorder"] = topBorder + (4.5 * 0.42);
+						smallBorderObject["bottomBorder"] = bottomBorder - (4.5 * 0.42);
+					}
+					else
+					{
+						smallBorderObject["leftBorder"] = leftBorder;
+						smallBorderObject["rightBorder"] = rightBorder;
+						smallBorderObject["topBorder"] = topBorder;
+						smallBorderObject["bottomBorder"] = bottomBorder;
+					}
+				}
+				else if (_totalFrameLetters > 3 && _totalFrameLetters <= 6)
+				{
+					//Alexis Louisianne - pictures need to be 1/8" to the right on the paper = 9pixels to the right
+					//Alexis louisianne   I am afraid we need to move the images 1/16" to the left.
+					if (_selectedFontFamily == "louisianne")
+					{
+						//Alert.show("Test");
+						mediumBorderObject["leftBorder"] = leftBorder - ((1 / 8 * 72) * 0.42) + ((1 / 16 * 72) * 0.42);
+						mediumBorderObject["rightBorder"] = rightBorder + ((1 / 8 * 72) * 0.42) - ((1 / 6 * 72) * 0.42);
+						mediumBorderObject["topBorder"] = topBorder;
+						mediumBorderObject["bottomBorder"] = bottomBorder;
+					}
+					//Alexis - serpentine images need to move down 1/8" and left 3/16" on the paper = 9pixels down and  13.5pixels left
+					//Alexis serpentine  images need to move 1/16" to the left on the paper so 
+					if (_selectedFontFamily == "serpentine")
+					{
+						mediumBorderObject["leftBorder"] = leftBorder + (13.5 * 0.42);
+						mediumBorderObject["rightBorder"] = rightBorder - (13.5 * 0.42);
+						mediumBorderObject["topBorder"] = topBorder - (9.0 * 0.42);
+						mediumBorderObject["bottomBorder"] = bottomBorder + (9.0 * 0.42);
+					}
+					else
+					{
+						mediumBorderObject["leftBorder"] = leftBorder;
+						mediumBorderObject["rightBorder"] = rightBorder;
+						mediumBorderObject["topBorder"] = topBorder;
+						mediumBorderObject["bottomBorder"] = bottomBorder;
+					}
+				}
+				else if (_totalFrameLetters > 6)
+				{
+					//Mackenzie Arial  - All the photos need to move to the left 1/8 = 9 pixels left
+					if (_selectedFontFamily == "arial")
+					{
+						largeBorderObject["leftBorder"] = leftBorder + (9 * 0.42);
+						largeBorderObject["rightBorder"] = rightBorder - (9 * 0.42);
+						largeBorderObject["topBorder"] = topBorder;
+						largeBorderObject["bottomBorder"] = bottomBorder;
+					}
+					//Mackenzie - serpentine  images need to move to the left 1/4 = 18pixels
+					else if (_selectedFontFamily == "serpentine")
+					{
+						largeBorderObject["leftBorder"] = leftBorder + (18 * 0.42);
+						largeBorderObject["rightBorder"] = rightBorder - (18 * 0.42);
+						largeBorderObject["topBorder"] = topBorder;
+						largeBorderObject["bottomBorder"] = bottomBorder;
+					}
+					else
+					{
+						largeBorderObject["leftBorder"] = leftBorder;
+						largeBorderObject["rightBorder"] = rightBorder;
+						largeBorderObject["topBorder"] = topBorder;
+						largeBorderObject["bottomBorder"] = bottomBorder;
+					}
+				}
+			}
+
+
+			
+			protected function setSelectedSimpleFlexShape():void
+			{
+				var selectedSimpleFlexShapeName:String = "simpleFlexShape" + NameframeUtils.getMinimum(_selectedSimpleFlexShapes);
+				_selectedSimpleFlexShape = this.getChildByName(selectedSimpleFlexShapeName) as SimpleFlexShape;
+			}
+
+			protected function setSelectedSimpleFlexShapeProxy():void
+			{
+				var selectedSimpleFlexShapeProxyName:String = (_selectedSimpleFlexShape.name).replace("simpleFlexShape","simpleFlexShapeFrontProxy");
+				_selectedSimpleFlexShapeProxy = this.getChildByName(selectedSimpleFlexShapeProxyName) as Canvas;
+			}
+
+			protected function setSelectedSimpleFlexShapeStretchableProxy():void
+			{
+				var selectedSimpleFlexShapeStretchableProxyName:String = (_selectedSimpleFlexShape.name).replace("simpleFlexShape","simpleFlexShapeStretchableProxy");
+				_selectedSimpleFlexShapeStretchableProxy = this.getChildByName(selectedSimpleFlexShapeStretchableProxyName) as Canvas;
+			}
+
+			protected function setSelectedSimpleFlexShapeStretchableProxyWidth():void
+			{
+				var startOfSelectedLetters:int = NameframeUtils.getMinimum(_selectedSimpleFlexShapes);
+				var endOfSelectedLetters:int = NameframeUtils.getMaximum(_selectedSimpleFlexShapes);
+				var selectedSimpleFlexShapeStretchableProxyWidth:Number = 0;
+				for (var i:int = startOfSelectedLetters;i <= endOfSelectedLetters;i++)
+				{
+					var simpleFlexShapeName:String = "simpleFlexShape" + i;
+					var simpleFlxShp:SimpleFlexShape = this.getChildByName(simpleFlexShapeName) as SimpleFlexShape;
+										
+					simpleFlxShp.mask = null;
+					simpleFlxShp.loadAsBackground(null);
+					var simpleFlexShapeFrontProxyName:String = "simpleFlexShapeFrontProxy" + i;
+					
+					//fixes the issue of selected image ot covering the whole area of selected fonts when previous image has been set already
+					if ( i == startOfSelectedLetters )
+					{
+						_startSelectedFlexShapeModelX = (this.getChildByName(simpleFlexShapeFrontProxyName) as Canvas).x;
+					}
+					
+					selectedSimpleFlexShapeStretchableProxyWidth += (this.getChildByName(simpleFlexShapeFrontProxyName) as Canvas).width;
+				}
+				_selectedSimpleFlexShapeStretchableProxy.width = selectedSimpleFlexShapeStretchableProxyWidth;
+			}
+
+			protected function removeFromSelectedSimpleFlexShapes(indexOfSelectedSimpleFlexShape:int):void
+			{
+				var ind:int = _selectedSimpleFlexShapes.indexOf(indexOfSelectedSimpleFlexShape);
+				if (ind == -1)
+				{
+					return;
+				}
+				_selectedSimpleFlexShapes.splice(ind,1);
+			}
+
+			protected function getPreviewSource():String
+			{
+				var cacheBypasser:Number = Math.round(Math.random() * 1000);	
+				var ret:String = "/assets/get_preview/" + uuid + "?" + cacheBypasser;
+				return ret;
+			}
+
+			protected function closeFlexPopupWindowFlex():void
+			{
+				ExternalInterface.call("closeFlexPopupWindow");
+			}
+
+			//the start of the capture image logic
+			protected function captureFullScreen():void
+			{
+				//removes the selection bounding box of object handle
+				resetAllSelectedHandleObjects();
+
+				//as the method name implies
+				setScaledFrameDimensionAndOriginPoint();
+
+				//set the needed image scaling factors ( snapshotXScaling and snapshotYScaling);
+				setXYImageScaling();
+
+				//set the front layer to invisible to expose only the back added image layer for the snapshot 
+				removeGridBackground();
+
+				//sets bitmapData loadBD to what is presently shown on this application
+				loadBD = getBitmapData(UIComponent(mx.core.Application.application));
+
+				//set the front layer to visible to expose the front frame layer again.
+				removeGridBackground();
+				
+				statusLayer.includeInLayout = true;
+				statusLayer.visible = true;
+
+				//makes the actual snapshot and send it to the server
+				drawImage();
+			}
+
+			protected function resetAllSelectedHandleObjects():void
+			{
+				_selectedSimpleFlexShape = null;
+				objectHandles.selectionManager.clearSelection();
+			}
+
+			protected function setScaledFrameDimensionAndOriginPoint():void
+			{
+				if (_totalFrameLetters <= 3)
+				{
+					_croppedImageWidth = image.width - new Number(smallBorderObject["leftBorder"]) - new Number(smallBorderObject["rightBorder"]);
+					_croppedImageHeight = image.height - new Number(smallBorderObject["leftBorder"]) - new Number(smallBorderObject["rightBorder"]);
+					_croppedImageStartX = image.x + new Number(smallBorderObject["leftBorder"]);
+					_croppedImageStartY = image.y + new Number(smallBorderObject["topBorder"]);
+				}
+				else if (_totalFrameLetters > 3 && _totalFrameLetters <= 6)
+				{
+					_croppedImageWidth = image.width - new Number(mediumBorderObject["leftBorder"]) - new Number(mediumBorderObject["rightBorder"]);
+					_croppedImageHeight = image.height - new Number(mediumBorderObject["leftBorder"]) - new Number(mediumBorderObject["rightBorder"]);
+					_croppedImageStartX = image.x + new Number(mediumBorderObject["leftBorder"]);
+					_croppedImageStartY = image.y + new Number(mediumBorderObject["topBorder"]);
+				}
+				else if (_totalFrameLetters > 6)
+				{
+					_croppedImageWidth = image.width - new Number(largeBorderObject["leftBorder"]) - new Number(largeBorderObject["rightBorder"]);
+					_croppedImageHeight = image.height - new Number(largeBorderObject["leftBorder"]) - new Number(largeBorderObject["rightBorder"]);
+					_croppedImageStartX = image.x + new Number(largeBorderObject["leftBorder"]);
+					_croppedImageStartY = image.y + new Number(largeBorderObject["topBorder"]);
+				}
+			}
+
+			protected function setXYImageScaling():void
+			{
+				if (_totalFrameLetters > 6)
+				{
+					_snapshotXScaling = new Number(bigFrame["width"]) / _croppedImageWidth;
+					_snapshotYScaling = new Number(bigFrame["height"]) / _croppedImageHeight;
+				}
+				else if (_totalFrameLetters > 3 && _totalFrameLetters <= 6)
+				{
+					_snapshotXScaling = new Number(mediumFrame["width"]) / _croppedImageWidth;
+					_snapshotYScaling = new Number(mediumFrame["height"]) / _croppedImageHeight;
+				}
+				else if (_totalFrameLetters <= 3)
+				{
+					_snapshotXScaling = new Number(smallFrame["width"]) / _croppedImageWidth;
+					_snapshotYScaling = new Number(smallFrame["height"]) / _croppedImageHeight;
+				}
+			}
+
+			protected function removeGridBackground():void
+			{
+				var isShown:Boolean = !img.visible;
+				img.visible = isShown;
+				imgGridCanvas.visible =  isShown;
+			}
+
+			protected function setOriginXAndY(space:Number):void
+			{
+				originX = 0;
+				originY = 0;
+
+				if (_totalFrameLetters > 6)
+				{
+					if (_selectedFontFamily == "arial")
+					{
+						originX = (width / 2 - totalTextWidth / 2) - 5;
+						originY = height / 2 - totalHeight / 2;
+					}
+					else if (_selectedFontFamily == "louisianne")
+					{
+						originX = (width / 2 - totalTextWidth / 2) - 15;
+						originY = height / 2 - totalHeight / 2;
+					}
+					else if (_selectedFontFamily == "porkys")
+					{
+						originX = (width / 2 - totalTextWidth / 2) - 5;
+						originY = height / 2 - totalHeight / 2;
+					}
+					else if (_selectedFontFamily == "serpentine")
+					{
+						originX = (width / 2 - totalTextWidth / 2) - 10;
+						originY = (height / 2 - totalHeight / 2);
+					}
+					else if (_selectedFontFamily == "simple")
+					{
+						originX = (width / 2 - totalTextWidth / 2) + 5;
+						originY = (height / 2 - totalHeight / 2);
+					}
+				}
+				else if (_totalFrameLetters > 3 && _totalFrameLetters <= 6)
+				{
+					if (_selectedFontFamily == "arial")
+					{
+						originX = (width / 2 - totalTextWidth / 2);
+						originY = (height / 2 - totalHeight / 2) - 10;
+					}
+					else if (_selectedFontFamily == "louisianne")
+					{
+						originX = (width / 2 - totalTextWidth / 2) - 5;
+						originY = (height / 2 - totalHeight / 2) - 10;
+					}
+					else if (_selectedFontFamily == "porkys")
+					{
+						//Alert.show("test");
+						originX = (width / 2 - totalTextWidth / 2) - 5;
+						originY = height / 2 - totalHeight / 2;
+					}
+					else if (_selectedFontFamily == "serpentine")
+					{
+						originX = (width / 2 - totalTextWidth / 2) - 5;
+						originY = (height / 2 - totalHeight / 2);
+					}
+					else if (_selectedFontFamily == "simple")
+					{
+						originX = (width / 2 - totalTextWidth / 2) + 5;
+						originY = (height / 2 - totalHeight / 2);
+					}
+				}
+				else if (_totalFrameLetters <= 3)
+				{
+					if (_selectedFontFamily != "serpentine")
+					{
+						originX = (width / 2 - totalTextWidth / 2) - 2;
+						originY = (height / 2 - totalHeight / 2) - 10;
+					}
+					else
+					{
+						originX = (width / 2 - totalTextWidth / 2) - 7;
+						originY = (height / 2 - totalHeight / 2) - 10;
+					}
+				}
+			}
+
+
+			protected function getBitmapData(target:UIComponent):BitmapData
+			{
+				var bd:BitmapData = new BitmapData(target.width * _snapshotXScaling,target.height * _snapshotYScaling);
+				var m:Matrix = new Matrix();
+				m.scale(_snapshotXScaling,_snapshotYScaling);
+				bd.draw(target,m,null,null,null,true);
+				//sendJPG(bd);
+				return bd;
+			}
+
+			protected function drawImage():void
+			{
+				//start position of cropping rectangle 
+				startPoint = new Point(_croppedImageStartX * _snapshotXScaling,_croppedImageStartY * _snapshotYScaling);
+
+				//crops the image and sends server request.
+				cropImageAndSendToServer(startPoint,_croppedImageWidth * _snapshotXScaling,_croppedImageHeight * _snapshotYScaling);
+			}
+
+			private function cropImageAndSendToServer(startPoint:Point,croppedImageWidth:int,croppedImageHeight:int):void
+			{
+				// Make a new bitmap data using square size
+				cropBD = new BitmapData(croppedImageWidth,croppedImageHeight,true,0x00000000);
+				// Position where will be dispayed in the new object, in our case (0,0)
+				posPoint = new Point(0,0);
+				// copy pixels from loaded bitmap data to our new object
+				cropBD.copyPixels(loadBD,new Rectangle(startPoint.x,startPoint.y,croppedImageWidth,croppedImageHeight),posPoint);
+				
+				sendJPG(cropBD);
+			}
+
+			private function imageLoadedHandler(event:Event):void
+			{
+				image = Image(event.target);
+
+				if (image.width > 0)
+				{
+					_totalFrameLetters = theName.length;
+
+					if (_totalFrameLetters > 6)
+					{
+						_croppedImageWidth = image.width - new Number(largeBorderObject["leftBorder"]) - new Number(largeBorderObject["rightBorder"]);
+						_croppedImageHeight = image.height - new Number(largeBorderObject["topBorder"]) - new Number(largeBorderObject["bottomBorder"]);
+						_croppedImageStartX = image.x + new Number(largeBorderObject["leftBorder"]);
+						_croppedImageStartY = image.y + new Number(largeBorderObject["topBorder"]);
+					}
+					else if (_totalFrameLetters > 3 && _totalFrameLetters <= 6)
+					{
+						_croppedImageWidth = image.width - new Number(mediumBorderObject["leftBorder"]) - new Number(mediumBorderObject["rightBorder"]);
+						_croppedImageHeight = image.height - new Number(mediumBorderObject["topBorder"]) - new Number(mediumBorderObject["bottomBorder"]);
+						_croppedImageStartX = image.x + new Number(mediumBorderObject["leftBorder"]);
+						_croppedImageStartY = image.y + new Number(mediumBorderObject["topBorder"]);
+					}
+					else if (_totalFrameLetters <= 3)
+					{
+						_croppedImageWidth = image.width - new Number(smallBorderObject["leftBorder"]) - new Number(smallBorderObject["rightBorder"]);
+						_croppedImageHeight = image.height - new Number(smallBorderObject["topBorder"]) - new Number(smallBorderObject["bottomBorder"]);
+						_croppedImageStartX = image.x + new Number(smallBorderObject["leftBorder"]);
+						_croppedImageStartY = image.y + new Number(smallBorderObject["topBorder"]);
+					}
+
+					_sizeContraintMaxWidth = _croppedImageWidth;
+					_sizeContraintMaxHeight = _croppedImageHeight;
+					//this.setChildIndex(img, 0);
+
+					//invoke the method to get the previously saved properties of added images based on the session
+					sessionImagePropertiesService.url = Application.application.url.replace("/flex/NameFrame.swf","") + "/assets/session_image_properties";
+
+					//Send data to server
+					sessionImagePropertiesService.send();
+				}
+
+			}
+
+			protected function sendJPG(bmpData:BitmapData):void
+			{
+
+				//CursorManager.setBusyCursor();
+				var jpgObj:JPGEncoder = new JPGEncoder(100);
+				var imageByteArray:ByteArray = jpgObj.encode(bmpData);
+				var req:URLRequest = new URLRequest();  
+				req.method = URLRequestMethod.POST;  
+				req.data = imageByteArray;  
+				req.contentType="application/octet-stream";  
+				req.url = Application.application.url.replace("/flex/NameFrame.swf","") + "/assets/save_flex_image";  
+				var loader:URLLoader = new URLLoader;  
+				loader.addEventListener(Event.COMPLETE,uploadCompleted);
+				
+				try
+				{
+					loader.load(req);
+				}
+				catch (error:Error)
+				{
+					//CursorManager.removeBusyCursor();
+					statusLayer.visible = false;
+					statusLayer.includeInLayout = false;
+					trace("Unable to load requested document.");
+				} 
+				
+			}
+						
+			public function getAllDimensions():void
+			{
+				var allDimensions:String = "";
+				var simpleFlexShapeCount:int = 1;
+				var addedImageObjectProxyCollection:Array = new Array();
+				var addedImageObjectProxy:Object;
+				var encodedObjectString:String = "";
+				var letterPosition:int = 0
+
+				for (var i:int = 0;i < this.getChildren().length;i++)
+				{
+					// sample request Json template:: {"id":39,"x":459,"width":45,"y":306,"largeFilename":null,"rotation":0,"height":88, "letterPosition":3, "isMaskStretchable":true, stretchedImageWidth: 3.36, stretchedImageHeight: 2.89 }
+					if (this.getChildAt(i) is SimpleFlexShape)
+					{
+						var tempSimpleFlexShape:SimpleFlexShape = this.getChildAt(i) as SimpleFlexShape;
+
+						if (tempSimpleFlexShape.largeFilenameID != "")
+						{
+							addedImageObjectProxy = new Object();
+							addedImageObjectProxy.id = tempSimpleFlexShape.largeFilenameID;
+							addedImageObjectProxy.height = tempSimpleFlexShape.model.height;
+							addedImageObjectProxy.width = tempSimpleFlexShape.model.width;
+							addedImageObjectProxy.rotation = tempSimpleFlexShape.model.rotation;
+
+							//we need to subtract the _croppedImageStartX and _croppedImageStartY to
+							//corresponding x and y to change the (0,0) reference to the frame image itself 
+							//and not the whole flex application (0,0) reference.
+							addedImageObjectProxy.x = tempSimpleFlexShape.model.x - _croppedImageStartX;
+							addedImageObjectProxy.y = tempSimpleFlexShape.model.y - _croppedImageStartY;
+
+							addedImageObjectProxy.largeFilename = tempSimpleFlexShape.backgroundImageSource;
+							//addedImageObjectProxy.letterPosition = i;
+							addedImageObjectProxy.letterPosition = tempSimpleFlexShape.name;
+
+							//for stretchable masks
+							addedImageObjectProxy.isMaskStretchable = tempSimpleFlexShape.isMaskStretchable;
+							var simpleFlexShapeStretchableProxyName:String = (tempSimpleFlexShape.name).replace("simpleFlexShape","simpleFlexShapeStretchableProxy");
+							var mask:Canvas = this.getChildByName(simpleFlexShapeStretchableProxyName) as Canvas;
+							addedImageObjectProxy.stretchedImageHeight = mask.height;
+							addedImageObjectProxy.stretchedImageWidth = mask.width;
+
+							//addedImageObjectProxyCollection.push(JSON.encode(addedImageObjectProxy));
+							addedImageObjectProxyCollection.push(addedImageObjectProxy);
+						}
+					}
+				}
+
+				var param:Object = new Object;
+				//param["encodedAddedImageObjects[]"] = addedImageObjectProxyCollection;
+				param["encodedAddedImageObjects"] = JSON.encode(addedImageObjectProxyCollection);
+				saveAddedImagePropService.url = Application.application.url.replace("/flex/NameFrame.swf","") + "/assets/save_added_image_properties";
+				saveAddedImagePropService.send(param);
+			}
+			
+			//--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			//
+			//
+			//  Methods for showing a customized tool tip.
+			//
+			//
+			//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			private function addImageShowToolTipAbovePrerequisite(event:MouseEvent):void
+			{
+				showToolTipAbove(event,"Set this image as background of selected letter(s).");
+			}
+
+			private function showToolTipAbove(evt:MouseEvent,text:String):void
+			{
+				var pt:Point = new Point(evt.currentTarget.x,evt.currentTarget.y);
+
+				// Convert the targets 'local' coordinates to 'global' -- this fixes the
+				// tooltips positioning within containers.
+				pt = evt.currentTarget.parent.contentToGlobal(pt);
+
+				_myToolTip = ToolTipManager.createToolTip(text,pt.x,pt.y,"errorTipAbove") as ToolTip;
+				_myToolTip.setStyle("borderColor","#9EC5ED");
+				_myToolTip.setStyle("color","black");
+				_myToolTip.setStyle("fontSize","10");
+				_myToolTip.setStyle("fontWeight","normal");
+				_myToolTip.setStyle("fontStyle","italic");
+
+				// Move tooltip below target and add some padding
+				var yOffset:int = _myToolTip.height + 20;
+				_myToolTip.y -= yOffset;
+			}
+
+			// Remove the tooltip
+			private function killToolTip(event:MouseEvent):void
+			{
+				ToolTipManager.destroyToolTip(_myToolTip);
+			}
+		]]>
+	</mx:Script>
+
+	<mx:Style source="assets/defaults.css"/>
+
+	<mx:HTTPService id="getFlashVarsService" showBusyCursor="true" url="" result="getFlashVarsResultHandler(event);"
+					resultFormat="text"/>
+	<mx:HTTPService id="httpService" showBusyCursor="true" url="" result="httpServiceResultHandler(event);" fault="httpServiceFaultHandler(event);"
+					resultFormat="text"/>
+	<mx:HTTPService id="imageService" showBusyCursor="true" url="" result="imageServiceResultHandler(event);" fault="imageServiceFaultHandler(event);"
+					resultFormat="text"/>
+	<mx:HTTPService id="saveImageService" url="" method="POST" result="saveImageServiceResultHandler(event);" fault="saveImageServiceFaultHandler(event);"
+					resultFormat="text"/>
+	<mx:HTTPService id="saveAddedImagePropService"  url="" method="POST" result="saveAddedImagePropResultHandler(event);" fault="saveAddedImagePropServiceFaultHandler(event);"
+					resultFormat="text"/>
+	<mx:HTTPService id="updateHTMLFrameService"  url="" method="POST" result="updateHTMLFrameResultHandler(event);" fault="updateHTMLFrameServiceFaultHandler(event);"
+					resultFormat="text"/>
+	<mx:HTTPService id="sessionImagePropertiesService" showBusyCursor="true" url="" method="POST" result="sessionImagePropertiesServiceResultHandler(event);"
+					resultFormat="text"/>
+
+	<mx:Fade id="fader" duration="500" />
+	
+	<mx:Canvas id="imgGridCanvas" horizontalCenter="0" top="185" width="{img.width}" height="{img.height}" styleName="noAddedImg"/>
+	<mx:Image id="img" horizontalCenter="0" top="185" click="resetAllSelectedHandleObjects();" updateComplete="imageLoadedHandler(event)"
+			  alpha="0.95"/>
+
+	<fisheye:FishEye left="10" bottom="10" right="10" id="hb" verticalScrollPolicy="off"
+					 horizontalScrollPolicy="off" verticalAlign="middle" horizontalGap="10" clipContent="true" rolloverScale="1.125"
+					 itemHeight="60" itemWidth="60">
+		<mx:Image id="trashBtn" source="{trashSource}" useHandCursor="true" buttonMode="true" click="trashBtnClicked(event);"
+				  maintainAspectRatio="false" width="60" height="60" mouseOver="showToolTipAbove(event, 'Delete selected letter(s) image')" mouseOut="killToolTip(event)"/>
+	</fisheye:FishEye>
+
+	<mx:Label x="10" y="10" text="Please follow the instruction for adding an image to the name characters:" color="#2C7BFC" fontSize="14"
+			  fontFamily="Verdana"/>
+	<mx:Text text="You may add an image to a single letter by clicking on the letter you want the image applied to and then clicking on add below the image." fontSize="12" left="10" right="16" top="38"
+			 selectable="false"/>
+	<mx:Label text="OR" horizontalCenter="0" fontSize="16" top="60"/>
+	<mx:Text y="85" text="You may add an image to multiple letters by clicking on the first letter, then holding the shift key down and clicking on the last letter that you want the image to cover.." left="10" right="10" fontSize="12"
+			 selectable="false" width="{this.width-20}"/>
+	<mx:Text y="125" text="After adding the image it may be resized or rotated by clicking on the letter(s) it has been placed on and moving the triangular or rotate handles.Images may be deleted by clicking on the 'trash' icon/button below." fontSize="12" left="10" right="10"
+			 height="49" selectable="false"/>
+
+	<mx:Button label="Continue" right="10" bottom="10" fillAlphas="[1.0, 1.0]" fillColors="[#000000, #000000]"
+			   color="#FFFFFF" fontSize="24" cornerRadius="4" click="captureFullScreen();"/>
+	<common:PreloaderVBox id="statusLayer" width="100%" height="100%" includeInLayout="false" visible="false" hideEffect="{fader}" showEffect="{fader}" alpha="0.95" />
+
+</mx:Application>

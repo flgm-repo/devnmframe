@@ -1,0 +1,39 @@
+<% content_for :header_title do %>
+  Order Codes Management
+<% end %>
+<div class="span-33 clear content-area">
+		<!-- Customize Options-->
+			<div class="span-33 column outer-block">
+				<div class="inner-block">
+					<div class="new-user"><%= link_to image_tag("/images/new-code-button.gif", :width => "144", :height => "49", :alt => ""), new_admin_order_code_path %></div>
+					<!-- Tabular Data -->
+					<div class="span-34 prepend-1">
+						<div class="tbl-row table-titles">
+							<div class="span-5 column">Code</div>
+							<div class="span-4 column">Discount</div>
+							<div class="span-7 column">Users Quantity</div>
+							<div class="span-6 column">Start Date</div>
+							<div class="span-5 column last">End Date</div>
+							<div class="span-3 column last">Actions</div>
+							<div class="clear"></div>
+						</div>
+						<% i = false %>
+						<% @order_codes.each do |code| %>
+                <% i = !i %>
+                <div class="tbl-row <%= (i)? 'odd':'even' %>">
+                  <div class="span-5 column"><%= link_to code.code, edit_admin_order_code_path(code) %></div>
+                  <div class="span-4 column"><%= number_to_percentage(code.discount, :precision => 2) %></div>
+                  <div class="span-7 column"><%= code.allowed_users %></div>
+                  <div class="span-6 column"><%= code.start_date.strftime("%b / %d / %Y") if code.start_date %></div>
+                  <div class="span-5 column last"><%= code.end_date.strftime("%b / %d / %Y") if code.end_date %></div>
+                  <div class="span-5 column last"><%= link_to "Delete", admin_order_code_path(code), :method => :delete %></div>
+                  <div class="clear"></div>
+                </div>
+            <% end %>
+					</div>
+					<!-- Tabular Data -->
+				</div>
+			</div>
+		<!-- Customize Options Ends-->
+	</div>
+

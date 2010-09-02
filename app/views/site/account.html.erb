@@ -1,0 +1,121 @@
+<div class="span-27 column outer-block align"
+  <h5>My Jobs</h5>
+  <div class="inner-block account">
+    <% for nameframe in @name_frame %>
+    <div class="left">
+      <%= image_tag "/save/#{nameframe.image_name}.png", :size => "200x100", :alt => "My job"%>
+    </div>
+    <ul class="account">
+      <% description = []
+         description = Nameframe.find_by_id(nameframe.id).nameframe_props
+          for prope in description
+            @name = @font_type = @frame_color = @matt_bottom = @matt_top = @ornament_top_left = @ornament_top_right = @ornament_bottom_left = @ornament_bottom_right = nil
+            @cost = prope.cost
+               if !prope.asset_category_id.nil? 
+                 category= prope.asset_category_id
+                 case category
+                   when 1
+                     if !prope.asset_id.nil? 
+                      @name = prope.description
+                     end
+                   when 2
+                     if !prope.asset_id.nil?
+                      asset = Asset.find_by_id(prope.asset_id)
+                      @font_type = asset.image_location
+                     end
+                   when 3
+                      if !prope.asset_id.nil?
+                       asset = Asset.find_by_id(prope.asset_id)
+                       frame = Frame.find_by_name(asset.display_name)
+                       @frame_color = frame.name
+                      end
+                   when 4
+                     if !prope.asset_id.nil?
+                       asset = Asset.find_by_id(prope.asset_id)
+                       matt_bottom = Matt.find_by_name(asset.display_name)
+                       @matt_bottom = matt_bottom.name
+                     end
+                   when 5 
+                     if !prope.asset_id.nil?
+                       asset = Asset.find_by_id(prope.asset_id)
+                       matt_top = Matt.find_by_name(asset.display_name)
+                       @matt_top = matt_top.name
+                     end
+                   when 6
+                     if !prope.asset_id.nil?
+                        ornament_position = prope.flag
+                        ornament = Asset.find_by_id(prope.asset_id)
+                        case ornament_position
+                          when 0
+                            @ornament_top_left= ornament.display_name
+                          when 1
+                            @ornament_top_right = ornament.display_name
+                          when 2
+                            @ornament_bottom_left= ornament.display_name
+                          when 3
+                            @ornament_bottom_right= ornament.display_name
+                        end
+                     end
+                  else
+                 end%>
+                <li>
+                  <%if !@name.nil?%>
+                    <%= "Name: #{@name}"%>
+                  <%end%>
+                </li>
+                <li>
+                  <%if !@font_type.nil?%>
+                    <%= "Font Type: #{@font_type}"%> 
+                  <%end%>
+                </li>
+               
+                  <%if !@frame_color.nil?%>
+                    <%="<li>"%>
+                    <%="Frame color: #{@frame_color}"%>
+                    <%="</li>"%>
+                  <%end%>
+
+                <li>
+                  <%if !@matt_bottom.nil?%>
+                    <%= "Matt bottom color: #{@matt_bottom}"%>
+                  <%end%>
+                </li>
+                <li>
+                  <%if !@matt_top.nil?%>
+                    <%= "Matt top color: #{@matt_top}"%>
+                  <%end%>
+                </li>
+                <li>
+                  <%if !@ornament_top_left.nil?%>
+                    <%="Ornament Top Left: #{@ornament_top_left}"%>
+                  <%end%>
+                </li>
+                <li>
+                  <%if !@ornament_top_right.nil?%>
+                    <%="Ornament Top Right: #{@ornament_top_right}"%>
+                  <%end%>
+                </li>
+                <li>
+                  <%if !@ornament_bottom_left.nil?%>
+                    <%="Ornament Bottom Left: #{@ornament_bottom_left}"%>
+                  <%end%>
+                </li>
+                <li>
+                  <%if !@ormament_bottom_right.nil?%>
+                    <%="Oranment Bottom Right: #{@ornament_bottom_right}"%>
+                  <%end%>
+                </li>
+                <br/>
+                <br/>
+            <% end%>
+           <%end %>
+     </ul>
+    <span>Cost:<%= @cost%></span>
+    <br/>
+    <%= link_to "Edit", {:controller => "site", :action => "account", :id => nameframe.id} %>
+    <%= link_to "|Delete|", {:controller => "site", :action => "delete", :id => nameframe.id} %>
+    <%= link_to "Checkout", {:controller => "checkout", :action => "checkout", :id => nameframe.id} %>
+    <hr class="clear"/>
+    <%end%>
+  </div>
+</div>

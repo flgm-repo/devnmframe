@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+  <head>
+    <title>NameFrame</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="resource-type" content="document"/>
+    <meta name="audience" content="all"/>
+    <meta name="distribution" content="global"/>
+    <meta name="keywords" content=""/>
+    <meta name="description" content=""/>
+    <meta name="robots" content="FOLLOW, INDEX"/>
+    <meta name="revisit-after" content="2 days"/>
+    <meta name="copyright" content="Site Name"/>
+    <meta name="author" content="Site admin Email"/>
+    <meta name="abstract" content="Site description text"/>
+    <%= link_tag "/favicon.ico", :rel => "shortcut icon" %>
+    <!-- StyleSheets -->
+    <%= stylesheet_link_tag 'main_stylesheet' %>
+    <%= yield :custom_stylesheets %>
+
+    <!-- JaveScripts -->
+    <%= javascript_include_tag "jquery-1.4.2.min" %>
+    <%= javascript_include_tag "jquery.fancybox-1.2.6" %>
+    <%= javascript_include_tag "jquery.formstyle-0.1.0"%>
+    <%= javascript_include_tag "jquery.selectbox-0.6.1"%>
+    <%= javascript_include_tag "jquery.easing.1.3"%>
+    <%= javascript_include_tag "jquery.validate"%>
+    <%= javascript_include_tag "jquery.blockUI"%>
+    <%= javascript_include_tag "application" %>
+    <%= yield :custom_javascripts %>
+    <%= javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};" if protect_against_forgery? %>
+  </head>
+  <body>
+    <div class="container">
+    <!-- Header-->
+      <div class="header span-33">
+        <ul class="top-nav">
+  			  <li><%= link_to "Home", root_path %></li>
+  			  <li><%= link_to "Admin Home", admin_root_path %></li>
+  				<li><%= link_to "Order Management", admin_orders_path %></li>
+          <li><%= link_to "Order Codes", admin_order_codes_path %></li>
+  				<li><%= link_to "User Management", admin_users_path  %></li>
+  				<li><%= link_to "Logout", admin_logout_path %></li>
+  			</ul>
+          <a href="/site" class="logo span-8 column append-10"><img alt="Nameframe" height="104"  src="/images/logo.gif" width="206"/></a>
+  				<h2 class="span-14 column last admin-heading"><%= yield :header_title %></h2>
+  			<div class="clear"></div>
+  		</div>
+      <!-- Content -->
+  		<div class="span-33 clear content-area">
+  		  <%= yield %>
+  		</div>
+    	<!-- Footer -->
+      <div class="footer span-33 clear">
+        <div class="span-24 column footer-left">
+          <p>&copy; 2009 NameFrame. All Rights Reserved.</p>
+          <ul>
+            <li><a href="/site/terms_of_service" title="">Terms of Service</a></li>
+            <li><a href="/site/privacy_policy" title="">Privacy Policy</a></li>
+            <li class="no-border"><a href="/site/contact" title="">Contact us</a></li>
+          </ul>
+        </div>
+        <div class="span-9 column footer-right last">
+          <ul>
+            <li class="verisign"><a href="#" class="click_pointer">Verisign</a></li>
+            <li class="made_in_usa"><a href="#" class="click_pointer">Made in Usa</a></li>
+          </ul>
+        </div>
+      </div>
+      <!-- Footer Ends -->
+    </div>
+    <div class="clear"></div>
+    <!-- Container Ends-->
+    <!-- Analytics code -->
+    <script type="text/javascript">
+    var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type="text/javascript">
+    try {
+    var pageTracker = _gat._getTracker("UA-16329119-1");
+    pageTracker._trackPageview();
+    } catch(err) {}</script>
+    <!-- Analytics code Ends -->
+  </body>
+</html>
+

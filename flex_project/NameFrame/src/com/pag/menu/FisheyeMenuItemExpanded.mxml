@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="110" height="400"
+	styleName="expandedMenuItemBG" verticalScrollPolicy="off" horizontalScrollPolicy="off">
+	
+	<mx:Script>
+		<![CDATA[
+			//----------------------------------------------------------------------
+			//
+			//  Attributes
+			//
+			//----------------------------------------------------------------------			
+			[Bindable] private var _labelText:String; //this is menu item main label
+			[Bindable] private var _menuItemType:String; //this will indicate what icons image is to be used
+			
+			private var fisheyeMenuItemExpanded:FisheyeMenuItemExpanded;
+			
+			//----------------------------------------------------------------------
+			//
+			//  Properties
+			//
+			//----------------------------------------------------------------------	
+			/**
+			 * Getter function for labelText property
+			 * */
+			public function get labelText():String	
+			{
+				return _labelText;
+			}
+			
+			/**
+			 * Setter function for labelText property
+			 * */
+			public function set labelText(value:String):void
+			{
+				_labelText = value;
+			}
+			
+			/**
+			 * Getter function for menuItemType property
+			 * */
+			public function get menuItemType():String	
+			{
+				return _menuItemType;
+			}
+			
+			[Inspectable(category="General", enumeration="profileIcon,reminderIcon,widgetsIcon,wishlistIcon,eStatementIcon", default="profileIcon")]
+			/**
+			 * Setter function for menuItemType property
+			 * */
+			public function set menuItemType(value:String):void
+			{
+				_menuItemType = value;
+			}
+						
+		]]>
+	</mx:Script>
+	
+	<mx:Canvas id="menuIcon" styleName="{_menuItemType}" width="35" height="35" left="5" top="5"/>
+	<mx:Text  id="menuLabel" height="15" styleName="menuLabelStyle" htmlText="{_labelText}" selectable="false" top="15" left="40"/>
+
+	
+</mx:Canvas>

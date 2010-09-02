@@ -1,0 +1,149 @@
+<% content_for :custom_javascripts do %>
+  <%= javascript_include_tag "swfobject.js"%>
+  <%= javascript_include_tag "jquery.uploadify.v2.0.2.min"%>
+  <%= javascript_include_tag 'swfupload' %>
+  <%= javascript_include_tag 'swfupload.queue' %>
+  <%= javascript_include_tag 'swfupload.swfobject' %>
+  <%= javascript_include_tag 'swfHandlers' %>
+  <%= javascript_include_tag "jquery.swfobject.1-0-9.min"%>
+  <%= javascript_include_tag "upload_images" %>
+<% end %>
+
+<%comment do%>
+  <%- session_key_name = ActionController::Base.session_options[:key] -%>
+  <script type="text/javascript">
+    $().ready(function() {
+      $('#uploadify').uploadify({
+        'uploader'	: '/flash/uploadify.swf',
+        'buttonImg'	: '/images/upload-photo-button.gif',
+        'width'		:	'254',
+        'height'		:	'49',
+        'cancelImg'	: '/images/cancel.png',
+        'folder'		: '/images/uploads',
+        'queueID'		: 'fileQueue',
+        'auto'			: true,
+        'multi'		: true,
+        script          : '/assets/do_upload',
+        fileDataName    : 'asset[file]',
+        scriptData      : {
+          '<%= session_key_name %>' : '<%= u cookies[session_key_name] %>',
+          'authenticity_token'  : encodeURIComponent('<%= u form_authenticity_token if protect_against_forgery? %>')
+        }
+      });
+    });
+  </script>
+<%end%>
+
+<script type='text/javascript'>
+
+  var swfu;
+  SWFUpload.onload = function () {
+    swfu = new SWFUpload({
+      // Create the custom swfupload_photos_path in the routes.rb file
+      upload_url : '/assets/swfupload?name_frame=<%=@nameframe.uuid%>',
+
+      file_size_limit : '3 MB',
+      file_types : '*.jpg;*.jpeg;*.gif;*.bmp;*.png',
+      file_types_description : 'Image Files',
+      file_upload_limit : 100,
+
+      minimum_flash_version: "8",
+      swfupload_pre_load_handler: swfuploadPreLoad,
+			swfupload_load_failed_handler: swfuploadLoadFailed,
+
+      //file_queue_error_handler : fileQueueError,
+      file_dialog_complete_handler : fileDialogComplete,
+      upload_progress_handler : uploadProgress,
+      //upload_error_handler : uploadError,
+      upload_success_handler : uploadSuccess,
+      upload_complete_handler : uploadComplete,
+
+      // Button Settings
+      button_image_url : "/images/upload-photo-button2.gif",
+      button_placeholder_id : "spanButtonPlaceholder",
+      button_width: 254,
+      button_height: 50,
+      button_text : '&nbsp;',
+      button_text_style : '.button { font-family: Helvetica, Arial, sans-serif; font-size: 12pt; } .buttonSmall { font-size: 10pt; }',
+      button_text_top_padding: 0,
+      button_text_left_padding: 18,
+      button_window_mode: SWFUpload.WINDOW_MODE.TRANSPARENT,
+      button_cursor: SWFUpload.CURSOR.HAND,
+
+      // Flash Settings
+
+      flash_url : "/flash/swfupload.swf",
+      custom_settings : {
+        upload_target : "divFileProgressContainer"
+      },
+      debug : false
+    });
+  };
+</script>
+
+<div class="span-33 directions customise"></div>
+<!-- Directions End-->
+<div class="outer-block box-pad">
+  <div class="inner-list">
+    <%= render :partial=>"/shared/page_tabs" %>
+    <div class="clear"></div>
+  </div>
+</div>
+<div class="clear"></div>
+<!-- Customize Options-->
+<div class="span-11 column outer-block">
+  <h5><%=session[:current_action].sub("_", " ").capitalize%></h5>
+  <div class="inner-block">
+    <form action="" method="post" class="customise-form">
+      <fieldset>
+        <div class="row">
+          <label class="left">Add Images:</label>
+          <span id="spanButtonPlaceholder" class="clear left"></span>
+          <p class="intimate  clear left">Maximum allowed upload: <span id="count"><%= @max_photo_uploads %> photos</span></p>
+        </div>
+        <div class="clear"></div>
+        <div class="row row-odd">
+          <label>Uploaded Images:</label><br />
+          <img id="loading" src="/images/loading.gif" alt="loading" class="hidden" />
+          <div id="divFileProgressContainer" class="progress_container"></div>
+          <ul id="uploaded_images" class="uploaded-images">
+            <%= render :partial => "/shared/uploaded_images", :locals => {:uploaded_images => @uploaded_images} %>
+          </ul>
+          <div class="clear"></div>
+        </div>
+        <div class="row">
+          <a id="flex" href="#flex-box"><img src="/images/add-images-frame.gif" width="254" height="49" alt="" /></a>
+        </div>
+        <div class="buttons">
+          <a href="/assets/select_ornament" class="back">Back</a>
+          <div class="clear"></div>
+        </div>
+         <%= link_to "Start Over", select_font_assets_path, :class => "clear start-over click_hand"  %>
+      </fieldset>
+    </form>
+  </div>
+</div>
+
+<!-- Customize Options Ends-->
+
+<!-- Preview Frame -->
+<div id="image_preview" class="span-22 column outer-block last">
+  <%= render :partial=>"/shared/frame_preview", :locals => {:cost => @cost} %>
+</div>
+<!-- Preview Frame Ends -->
+
+
+<!-- Flex -->
+<div id="flex-box" style="display:none;">
+  <%= render :partial=>"/shared/flex" %>
+</div>
+
+<!-- without_images message-->
+  <a href="#without_images-message" id="confirmation"></a>
+  <div class="fancybox-container hide_element center delete_images" id="without_images-message">
+    <span class="div_login_notice notice"></span>
+    <p class="fancy_div">Are you sure? All uploaded images will be deleted.</p>
+    <%= link_to "No", "#preview", :onclick => "$('#no-image').attr('checked',false);closeAllFancyWindows()", :class => "button_no" %>
+    <%= link_to "Yes", "#preview", :onclick => remote_function(:url=>without_images_assets_path, :with => "'without_images=true'", :complete => "update_page_data();showLoading(false)", :before => "closeAllFancyWindows();showLoading(true)"), :class => "button_yes" %>
+  </div>
+

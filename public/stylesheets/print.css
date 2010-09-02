@@ -1,0 +1,72 @@
+body {
+  color: #000;
+  font-family:"lucida grande","lucida sans unicode", Trebuchet, tahoma,verdana,arial,sans-serif;
+  font-size: 11pt;
+  width: 900px;
+}
+ul.top-nav, ul.social-icons li{
+  display: none !important;
+}
+.hide_element, div.footer, .printer{
+  display: none;
+}
+a.logo img{
+  border:0;
+  margin: 0;
+}
+.thanks_image img {
+  float: left;
+  height: 187px;
+  width: 260px;
+}
+div.block-text{
+  border: 12px #F8F8F8 solid;
+  height: 700px;
+  margin-top: -10px;
+  width: 900px !important;
+}
+div.thank-you{
+  border: 53px #F8F8F8 solid;
+  width: 500px !important;
+}
+div.confirm-details{
+  height: 200px !important;
+  margin: 5%;
+  width: 880px !important;
+}
+div.confirm-details p{
+  width: 100px;
+}
+
+div.thank-you h6.order-info {
+  padding: 18px;
+  margin: -52px 0 0 80px;
+  width: 300px !important;
+}
+div.thank-you h6.frame-size {
+  padding: 18px;
+  margin: 0 0 -52px 80px;
+  width: 300px !important;
+}
+div.thank-you h6 span.user-mail{
+  margin: -12px 0 0 0;
+  width: 100px;
+}
+div.block-text h5 {
+  margin-top: -10px;
+  margin-bottom: 10px;
+}
+.thank-you h6 span.order-no {
+  font-size: 10pt;
+  margin: 0;
+}
+.small{
+  margin: 0 5%;
+}
+.medium{
+  margin: 0 5%;
+}
+.large{
+  margin: 0 1%;
+}
+

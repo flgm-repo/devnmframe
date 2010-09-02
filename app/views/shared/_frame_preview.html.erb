@@ -1,0 +1,36 @@
+<div class="span-22 title-placements last">
+  <div class="span-11 column"><h5>Preview Frame</h5></div>
+  <div class="span-11 column last right"><h5 class="total"><span class="small">Total: </span> <span class="currency">$</span><span class="value" id="cost"><%= @cost %></span></h5></div>
+</div>
+<div class="inner-block">
+  <!-- Frame-->
+  <div class="preview" id ="preview_image">
+      <%= render :partial => "/shared/preview_image" %>
+  </div>
+    <ul class="link-buttons">
+     <% if current_user %>
+        <li><%= link_to "Save My Work for Later", saving_data_assets_path %></li>
+      <% else %>
+         <li><%= link_to "Save My Work for Later", "#login-box", :id => "login-button", :class => "login" %></li>
+      <% end%>
+      <li>or</li>
+      <li><%= link_to 'Checkout', "#preview", :class => "checkout_button" %></li>
+    </ul>
+    <div class="clear"></div>
+  <!-- Error Window -->
+  <a href="#any_uploaded_images_error" title="" id="uploaded_images_error"></a>
+  <div id="any_uploaded_images_error" class= "hidden">
+    <p class="error-window">
+    Do you want to proceed to checkout?<br /></p>
+    <div class="text-links">
+      <%= link_to "We choose to add photos ourselves after the NameFrame arrives.  (Letters are designed to accept standard 4X6 photos.)", checkout_path %>
+      <%= link_to image_tag("checkout-button.gif", :width => "274", :height => "49", :alt => "Nameframe", :class=> "link-button" ), checkout_path%>
+    </div>
+    <div class="text-links">
+      <%= link_to "I want to upload and arrange photos so the NameFrame arrives completed.", upload_image_assets_path %>
+      <%= link_to image_tag("upload-photo-button.gif", :width => "254", :height => "49", :alt => "Nameframe", :class=> "link-button-checkout" ), upload_image_assets_path %>
+    </div>
+
+  </div>
+</div>
+

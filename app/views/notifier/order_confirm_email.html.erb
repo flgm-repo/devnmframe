@@ -1,0 +1,133 @@
+<style type="text/css">
+	a, a:link, a:visited{text-decoration:none;color:#1b1b1b;}
+</style>
+<div align="center" style="margin:0px; padding:0px;">
+  <table width="650" border="0" cellspacing="0" cellpadding="0" style="margin:0px;padding:0px;background-color:#fcfcfc;">
+    <tr>
+      <td height="156" colspan="2" style="margin:0px;padding:0px;"><table width="650" border="0" cellspacing="0" cellpadding="0" style="margin:0px; padding:0px; height:156px;">
+        <tr>
+          <td colspan="2" bgcolor="#3a73ba" style="border-bottom:5px solid #f2f2f2; height:22px;">
+            <%= image_tag "spacer.gif", :width => "1", :height => "22" %>
+          </td>
+        </tr>
+        <tr>
+          <td width="223" style="padding:0px;margin:0px;">
+            <a href="#">
+              <%= image_tag "logo.gif", :width => "199", :height => "99", :alt => "NameFrame", :longdesc => "http://nameframe.com", :style => "margin:0px;padding:0px;border:none;" %>
+            </a>
+          </td>
+          <td width="381" align="right" valign="middle">
+          <p style="font-family:'lucida grande','lucida sans unicode', Trebuchet, tahoma,verdana,arial,sans-serif;font-size:16px;color:#43638b;margin:0 5px;letter-spacing:-1px;">For all order related inquiries please call us at</p>
+          <p style="font-family:'lucida grande','lucida sans unicode', Trebuchet, tahoma,verdana,arial,sans-serif;font-size:25px;color:#000000;margin:0 5px;font-weight:bold;letter-spacing:-1px;"><%= Settings.telephone_free %></p>
+          </td>
+        </tr>
+      </table></td>
+    </tr>
+    <tr>
+      <td colspan="2"><table width="650" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td><p style="font-family:'lucida grande','lucida sans unicode', Trebuchet, tahoma,verdana,arial,sans-serif;font-size:34px;color:#000000;margin:0px;padding:0px;letter-spacing:-1px;">Order Confirmation</p></td>
+        </tr>
+        <tr>
+        	<td style="margin:0px;padding:0px;">
+            	<table width="100%" border="0" cellspacing="0" cellpadding="15">
+  <tr>
+    <td bgcolor="#f4f4f4"><table width="100%" border="0" cellspacing="0" cellpadding="10">
+      <tr>
+        <td colspan="2" bgcolor="#FFFFFF"><p style="font-family:'lucida grande','lucida sans unicode', Trebuchet, tahoma,verdana,arial,sans-serif;font-size:16px;color:#000000;margin:0 0 15px 0;padding:0 0 15px 0;border-bottom:1px solid #f7f7f7;letter-spacing:-1px;">Dear <%= @checkout.billing.full_name %>, <br/><br/></p>
+		<p style="font-family:'lucida grande','lucida sans unicode', Trebuchet, tahoma,verdana,arial,sans-serif;font-size:16px;color:#000000;margin:0 0 15px 0;padding:0 0 15px 0;border-bottom:1px solid #f7f7f7;letter-spacing:-1px;">Thank you for the order you recently placed at NameFrame.com. All NameFrame orders are shipped within 2 business days of receipt. Once your order is shipped you will receive an email with shipping and tracking information. One again, thank you for your order. We appreciate your business and we are sure you will appreciate your NameFrame for many years. The details of your purchase are as follows:</p>
+
+    	</td>
+      </tr>
+      <tr>
+        <td width="58%" bgcolor="#FFFFFF"><p style="font-family:'lucida grande','lucida sans unicode', Trebuchet, tahoma,verdana,arial,sans-serif;font-size:18px;color:#000000;margin:0px;padding:0px;letter-spacing:-1px;">Order Number: <%= @checkout.order_number %> </p></td>
+        <td width="42%" bgcolor="#FFFFFF"><p style="font-family:'lucida grande','lucida sans unicode', Trebuchet, tahoma,verdana,arial,sans-serif;font-size:18px;color:#000000;margin:0px;padding:0px;letter-spacing:-1px;">Order Date: <%= @checkout.created_at.strftime("%m / %d / %Y") %></p></td>
+      </tr>
+      <tr>
+        <td colspan="2" bgcolor="#FFFFFF"><p style="font-family:'lucida grande','lucida sans unicode', Trebuchet, tahoma,verdana,arial,sans-serif;font-size:18px;color:#000000;margin:0px;padding:0px;letter-spacing:-1px;">Frame Size: <%= @checkout.nameframe.get_size[:frame_size] %></p></td>
+      </tr>
+      <tr>
+        <td colspan="2" bgcolor="#FFFFFF"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="48%" align="left" valign="top"><p style="font-family:'lucida grande','lucida sans unicode', Trebuchet, tahoma,verdana,arial,sans-serif;font-size:18px;color:#000000;margin:0px;padding:0px;letter-spacing:-1px;">Order Details</p>
+            <table width="100%" border="0" cellspacing="0" cellpadding="2" style="margin-top:8px;">
+  <tr>
+    <td><p style="font-family:'lucida grande','lucida sans unicode', Trebuchet, tahoma,verdana,arial,sans-serif;font-size:14px;color:#43638b;margin:0px;padding:0px;letter-spacing:-1px;">NameFrame Cost</p></td>
+    <td align="center"><p style="font-family:'lucida grande','lucida sans unicode', Trebuchet, tahoma,verdana,arial,sans-serif;font-size:14px;color:#43638b;margin:0px;padding:0px;letter-spacing:-1px;">:</p></td>
+    <td align="right"><p style="font-family:'lucida grande','lucida sans unicode', Trebuchet, tahoma,verdana,arial,sans-serif;font-size:14px;color:#43638b;margin:0px;padding:0px;letter-spacing:-1px;"><%= number_to_currency(@checkout.nameframe_cost) %></p></td>
+  </tr>
+  <tr>
+    <td><p style="font-family:'lucida grande','lucida sans unicode', Trebuchet, tahoma,verdana,arial,sans-serif;font-size:14px;color:#43638b;margin:0px;padding:0px;letter-spacing:-1px;">Shipping Cost</p></td>
+    <td align="center"><p style="font-family:'lucida grande','lucida sans unicode', Trebuchet, tahoma,verdana,arial,sans-serif;font-size:14px;color:#43638b;margin:0px;padding:0px;letter-spacing:-1px;">:</p></td>
+    <td align="right"><p style="font-family:'lucida grande','lucida sans unicode', Trebuchet, tahoma,verdana,arial,sans-serif;font-size:14px;color:#43638b;margin:0;padding:0;letter-spacing:-1px;"><%= number_to_currency(@checkout.shipping_cost) %></p></td>
+  </tr>
+  <tr>
+    <td><p style="font-family:'lucida grande','lucida sans unicode', Trebuchet, tahoma,verdana,arial,sans-serif;font-size:14px;color:#43638b;margin:0px;padding:0px;letter-spacing:-1px;">Tax</p></td>
+    <td align="center"><p style="font-family:'lucida grande','lucida sans unicode', Trebuchet, tahoma,verdana,arial,sans-serif;font-size:14px;color:#43638b;margin:0px;padding:0px;letter-spacing:-1px;">:</p></td>
+    <td align="right"><p style="font-family:'lucida grande','lucida sans unicode', Trebuchet, tahoma,verdana,arial,sans-serif;font-size:14px;color:#43638b;margin:0px;padding:0px;letter-spacing:-1px;"><%= number_to_currency(@checkout.tax) %></p></td>
+  </tr>
+  <tr>
+    <td><p style="font-family:'lucida grande','lucida sans unicode', Trebuchet, tahoma,verdana,arial,sans-serif;font-size:16px;color:#000000;margin:0px;padding:0px;letter-spacing:-1px;">Total</p></td>
+    <td align="center"><p style="font-family:'lucida grande','lucida sans unicode', Trebuchet, tahoma,verdana,arial,sans-serif;font-size:16px;color:#000000;margin:0px;padding:0px;letter-spacing:-1px;">:</p></td>
+    <td align="right"><p style="font-family:'lucida grande','lucida sans unicode', Trebuchet, tahoma,verdana,arial,sans-serif;font-size:16px;color:#000000;margin:0px;padding:0px;letter-spacing:-1px;"><%= number_to_currency(@checkout.total) %></p></td>
+  </tr>
+</table>
+
+            </td>
+            <td width="12%">&nbsp;</td>
+            <td width="40%" align="left" valign="top"><p style="font-family:'lucida grande','lucida sans unicode', Trebuchet, tahoma,verdana,arial,sans-serif;font-size:18px;color:#000000;margin:0px;padding:0px;letter-spacing:-1px;">Shipping Method</p>
+            <p style="font-family:'lucida grande','lucida sans unicode', Trebuchet, tahoma,verdana,arial,sans-serif;font-size:14px;color:#43638b;margin:8px 0 0 0;padding:0px;letter-spacing:-1px;"><%= @checkout.shipping_method %>, Delivery via UPS</p>
+            </td>
+          </tr>
+        </table></td>
+      </tr>
+      <tr>
+        <td colspan="2" bgcolor="#FFFFFF"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="48%" height="120" align="left" valign="top"><p style="font-family:'lucida grande','lucida sans unicode', Trebuchet, tahoma,verdana,arial,sans-serif;font-size:18px;color:#000000;margin:0px;padding:0px;letter-spacing:-1px;">Billing Address</p>
+            <p style="font-family:'lucida grande','lucida sans unicode', Trebuchet, tahoma,verdana,arial,sans-serif;font-size:14px;color:#43638b;margin:8px 0 0 0;padding:0px;letter-spacing:-1px;line-height:1.5em;"><%= @checkout.billing.full_address %></p>
+            </td>
+            <td width="12%">&nbsp;</td>
+            <td width="40%" align="left" valign="top"><p style="font-family:'lucida grande','lucida sans unicode', Trebuchet, tahoma,verdana,arial,sans-serif;font-size:18px;color:#000000;margin:0px;padding:0px;letter-spacing:-1px;">Shipping Address</p>
+             <p style="font-family:'lucida grande','lucida sans unicode', Trebuchet, tahoma,verdana,arial,sans-serif;font-size:14px;color:#43638b;margin:8px 0 0 0;padding:0px;letter-spacing:-1px;line-height:1.5em;"><%= @checkout.shipping.full_address %></p>
+            </td>
+          </tr>
+        </table></td>
+      </tr>
+      <tr>
+        <td colspan="2" bgcolor="#FFFFFF"><p style="font-family:'lucida grande','lucida sans unicode', Trebuchet, tahoma,verdana,arial,sans-serif;font-size:16px;color:#000000;margin:0px;padding:0px;letter-spacing:-1px;">Thank you for your order.</p>
+        <p style="font-family:'lucida grande','lucida sans unicode', Trebuchet, tahoma,verdana,arial,sans-serif;font-size:26px;color:#43638b;margin:0px;padding:0px;letter-spacing:-1px;">NameFrame</p>
+        </td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+
+            </td>
+        </tr>
+      </table></td>
+    </tr>
+    <tr>
+    	<td width="298" align="left" valign="top" style="padding:10px 5px;">
+        	<p style="font-family:'lucida grande','lucida sans unicode', Trebuchet, tahoma,verdana,arial,sans-serif;font-size:12px;color:#606060;margin:15px 0 0 0;padding:0px;letter-spacing:-1px;">&copy; 2009 NameFrame. All Rights Reserved.</p>
+            <p style="font-family:'lucida grande','lucida sans unicode', Trebuchet, tahoma,verdana,arial,sans-serif;font-size:12px;color:#606060;margin:0;padding:0px;letter-spacing:-1px;"><a href="www.nameframe.com/site/terms_of_service">Terms of Service</a> &nbsp; | &nbsp; <a href="www.nameframe.com/site/privacy_policy">Privacy Policy</a> &nbsp; | &nbsp;  <a href="www.nameframe.com/contact">Contact Us</a></p>
+        </td>
+    	<td width="332" align="right" style="padding:10px 0;"><table width="100%" border="0" cellspacing="0" cellpadding="5">
+    	  <tr>
+    	    <td width="77%" align="right" valign="top">
+    	      <a href="#">
+    	        <%= image_tag "verisign.gif", :width => "160", :height => "77", :alt => "Verisign", :border => "0" %>
+    	      </a>
+    	    </td>
+    	    <td width="23%">
+    	      <a href="#">
+    	        <%= image_tag "madeinusa.gif", :width => "74", :height => "80", :alt => "made in usa", :border => "0"%>
+    	      </a>
+    	    </td>
+  	    </tr>
+  	  </table>
+        </td>
+    </tr>
+  </table>
+</div>
+

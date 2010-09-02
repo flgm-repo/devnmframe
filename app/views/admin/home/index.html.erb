@@ -1,0 +1,48 @@
+<% content_for :header_title do %>
+  Dashboard
+<% end %>
+<!-- Content -->
+		<!-- Recent Orders-->
+	<div class="span-11 column outer-block">
+		<h5>Recent Orders</h5>
+		<div class="inner-block">
+			<ul class="recent-orders">
+        <%  @new_orders.each do |order| %>
+				<li><%= link_to "##{order.order_number} - #{order.user_name}", :controller=>:orders,:action=>:show,:id=>order.nameframe_id %></li>
+        <% end %>
+        <li><%= link_to "Show more", :controller=>:orders, :action=>:filter,:filter_by=>Checkout::STATE_NEW %></li>
+			</ul>
+		</div>
+	</div>
+<!-- Recent Orders Ends-->
+
+<!--  In progrees  Orders-->
+	<div class="span-10 column outer-block">
+		<h5>In Progress Orders</h5>
+		<div class="inner-block">
+      <ul class="recent-orders">
+        <%  @inprogress_orders.each do |order|
+           name=order.user.name.blank? ? "No Profile Name" : "#{order.user.name}"%>
+				<li><%= link_to "##{order.order_number} - #{name}", :controller=>:orders,:action=>:show,:id=>order.nameframe_id %></li>
+        <% end %>
+        <li><%= link_to "Show more", :controller=>:orders, :action=>:filter,:filter_by=>Checkout::STATE_IN_PROGRESS %></li>
+			</ul>
+		</div>
+	</div>
+<!-- Recent in progress Ends-->
+
+<!-- Recent shipped Orders-->
+	<div class="span-11 column outer-block">
+		<h5>Recently Shipped</h5>
+		<div class="inner-block">
+       <ul class="recent-orders">
+        <%  @shipped_orders.each do |order|
+            name=order.user.name.blank? ? "No Profile Name" : "#{order.user.name}"%>
+				<li><%= link_to "##{order.order_number} - #{order.user_name}", :controller=>:orders, :action=>:show, :id=>order.nameframe_id %></li>
+        <% end %>
+        <li><%= link_to "Show more", :controller=>:orders, :action=>:filter,:filter_by=>Checkout::STATE_COMPLETED %></li>
+			</ul>
+		</div>
+	</div>
+<!-- Recent shipped Orders Ends-->
+

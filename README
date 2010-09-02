@@ -1,0 +1,25 @@
+# Steps to follow in order for the application to work (May 10th)
+
+**Settings-rails gem issue
+
+  This gem is used to set some environment variables in the database and retrieve them in an easy way. In order for us to manage the variables, a file is stored in config/initializers/settings.rb which contains the set of variables used.
+  When runing rake tasks, the file is loaded and a model Settings hasn't been created yet, so the rake tasks sometimes throws an error.
+  In order for us to avoid this issue, just remove the file from the repo while you run rake tasks:
+  
+      rake gems:install
+      rake db:create
+      rake db:migrate
+
+  Then restore it by runing:
+  
+      git checkout config/initializers/settings.rb
+  
+  Then do the last rake command:
+  
+      rake default:models <-- This rake task runs the code in lib/tasks/defaults.rake which sets the initial values to the database
+      
+** The Whenever gem
+
+  Once all is running well, a task must be run in order for the application to remove old unused nameframes from the database. This daemon is run by the next command:
+  
+      whenever --update-crontab nameframe

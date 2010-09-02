@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%" verticalScrollPolicy="off" horizontalScrollPolicy="off" borderColor="#0C7EFF" borderStyle="solid" borderThickness="2"
+	cornerRadius="5">
+	<mx:Metadata>
+		[Event(name="clickedAdd", type="flash.events.Event")]
+	</mx:Metadata>	
+	<mx:Script>
+		<![CDATA[
+			[Bindable]
+			public var source:Object;
+			
+		]]>
+	</mx:Script>
+	
+	<mx:Image source="{source['thumb-filename']}" top="0" width="100%" horizontalCenter="0" bottom="18"/>
+	<mx:Canvas id="addButton" left="0" right="0" bottom="0" height="18" backgroundColor="#0C7EFF" borderStyle="none" buttonMode="true" useHandCursor="true" click="dispatchEvent(new Event('clickedAdd'));">
+		<mx:Label text="Add" horizontalCenter="0" verticalCenter="0" color="#FFFFFF" fontSize="12" fontWeight="bold" useHandCursor="true" buttonMode="true" click="dispatchEvent(new Event('clickedAdd'));"/>
+	</mx:Canvas>
+</mx:Canvas>
