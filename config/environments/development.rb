@@ -1,5 +1,5 @@
 # Settings specified here will take precedence over those in config/environment.rb
-SITE_URL = "192.168.0.89:3000"
+SITE_URL = "127.0.0.1:3000"
 # In the development environment your application's code is reloaded on
 # every request.  This slows down response time but is perfect for development
 # since you don't have to restart the webserver when you make code changes.
@@ -31,7 +31,7 @@ config.action_mailer.smtp_settings             = {
   :domain => "localhost"
  }
 
-ADMIN_EMAIL_ACCOUNT = "daniel.gaytan@crowdint.com"
+ADMIN_EMAIL_ACCOUNT = "sysadmin@vikiyagroup.com"
 
 #ActionMailer::Base.smtp_settings = {
 #  :tls => true,
