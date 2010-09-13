@@ -9955,3 +9955,91 @@ ActionController::RoutingError (No route matches "/undefined" with {:method=>:ge
   /Users/supinchecompilla/.rvm/rubies/ruby-1.8.6-p399/lib/ruby/1.8/webrick/server.rb:82:in `start'
 
 Rendering rescues/layout (not_found)
+  [4;35;1mSQL (0.2ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing SiteController#index (for 127.0.0.1 at 2010-09-13 17:23:51) [GET]
+Rendering template within layouts/application
+Rendering site/index
+Rendered shared/_social_voice (0.1ms)
+Rendered shared/_header_image (0.7ms)
+Completed in 24ms (View: 21, DB: 0) | 200 OK [http://0.0.0.0/]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing ApplicationController#index (for 127.0.0.1 at 2010-09-13 17:23:52) [GET]
+
+ActionController::RoutingError (No route matches "/undefined" with {:method=>:get}):
+  /Users/supinchecompilla/.rvm/rubies/ruby-1.8.6-p399/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+  /Users/supinchecompilla/.rvm/rubies/ruby-1.8.6-p399/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+  /Users/supinchecompilla/.rvm/rubies/ruby-1.8.6-p399/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+  /Users/supinchecompilla/.rvm/rubies/ruby-1.8.6-p399/lib/ruby/1.8/webrick/server.rb:162:in `start'
+  /Users/supinchecompilla/.rvm/rubies/ruby-1.8.6-p399/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+  /Users/supinchecompilla/.rvm/rubies/ruby-1.8.6-p399/lib/ruby/1.8/webrick/server.rb:95:in `start'
+  /Users/supinchecompilla/.rvm/rubies/ruby-1.8.6-p399/lib/ruby/1.8/webrick/server.rb:92:in `each'
+  /Users/supinchecompilla/.rvm/rubies/ruby-1.8.6-p399/lib/ruby/1.8/webrick/server.rb:92:in `start'
+  /Users/supinchecompilla/.rvm/rubies/ruby-1.8.6-p399/lib/ruby/1.8/webrick/server.rb:23:in `start'
+  /Users/supinchecompilla/.rvm/rubies/ruby-1.8.6-p399/lib/ruby/1.8/webrick/server.rb:82:in `start'
+
+Rendering rescues/layout (not_found)
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing SiteController#contact (for 127.0.0.1 at 2010-09-13 17:23:55) [GET]
+Rendering template within layouts/application
+Rendering site/contact
+  [4;35;1mSettings Load (0.6ms)[0m   [0mSELECT * FROM `settings` WHERE (`settings`.`var` = 'address') LIMIT 1[0m
+  [4;36;1mSettings Load (0.5ms)[0m   [0;1mSELECT * FROM `settings` WHERE (`settings`.`var` = 'city') LIMIT 1[0m
+  [4;35;1mSettings Load (0.2ms)[0m   [0mSELECT * FROM `settings` WHERE (`settings`.`var` = 'state') LIMIT 1[0m
+  [4;36;1mSettings Load (1.8ms)[0m   [0;1mSELECT * FROM `settings` WHERE (`settings`.`var` = 'postal') LIMIT 1[0m
+  [4;35;1mSettings Load (0.3ms)[0m   [0mSELECT * FROM `settings` WHERE (`settings`.`var` = 'telephone_number') LIMIT 1[0m
+  [4;36;1mSettings Load (0.3ms)[0m   [0;1mSELECT * FROM `settings` WHERE (`settings`.`var` = 'telephone_free') LIMIT 1[0m
+  [4;35;1mSettings Load (0.3ms)[0m   [0mSELECT * FROM `settings` WHERE (`settings`.`var` = 'fax') LIMIT 1[0m
+  [4;36;1mSettings Load (0.3ms)[0m   [0;1mSELECT * FROM `settings` WHERE (`settings`.`var` = 'contact_email') LIMIT 1[0m
+  [4;35;1mSettings Load (0.5ms)[0m   [0mSELECT * FROM `settings` WHERE (`settings`.`var` = 'work_hours') LIMIT 1[0m
+Rendered shared/_contact_us (14.4ms)
+Rendered shared/_social_voice (0.1ms)
+Rendered shared/_header_image (0.5ms)
+Completed in 90ms (View: 82, DB: 5) | 200 OK [http://0.0.0.0/contact]
+  [4;36;1mSQL (0.2ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing SiteController#about_us (for 127.0.0.1 at 2010-09-13 17:23:59) [GET]
+Rendering template within layouts/application
+Rendering site/about_us
+Rendered shared/_social_voice (0.1ms)
+Rendered shared/_header_image (0.5ms)
+Completed in 14ms (View: 11, DB: 0) | 200 OK [http://0.0.0.0/about_us]
+  [4;36;1mSQL (0.4ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing SiteController#index (for 127.0.0.1 at 2010-09-13 17:24:21) [GET]
+Rendering template within layouts/application
+Rendering site/index
+Rendered shared/_social_voice (0.1ms)
+Rendered shared/_header_image (0.5ms)
+Completed in 9ms (View: 6, DB: 1) | 200 OK [http://0.0.0.0/]
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET NAMES 'utf8'[0m
+  [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing ApplicationController#index (for 127.0.0.1 at 2010-09-13 17:24:22) [GET]
+
+ActionController::RoutingError (No route matches "/undefined" with {:method=>:get}):
+  /Users/supinchecompilla/.rvm/rubies/ruby-1.8.6-p399/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+  /Users/supinchecompilla/.rvm/rubies/ruby-1.8.6-p399/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+  /Users/supinchecompilla/.rvm/rubies/ruby-1.8.6-p399/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+  /Users/supinchecompilla/.rvm/rubies/ruby-1.8.6-p399/lib/ruby/1.8/webrick/server.rb:162:in `start'
+  /Users/supinchecompilla/.rvm/rubies/ruby-1.8.6-p399/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+  /Users/supinchecompilla/.rvm/rubies/ruby-1.8.6-p399/lib/ruby/1.8/webrick/server.rb:95:in `start'
+  /Users/supinchecompilla/.rvm/rubies/ruby-1.8.6-p399/lib/ruby/1.8/webrick/server.rb:92:in `each'
+  /Users/supinchecompilla/.rvm/rubies/ruby-1.8.6-p399/lib/ruby/1.8/webrick/server.rb:92:in `start'
+  /Users/supinchecompilla/.rvm/rubies/ruby-1.8.6-p399/lib/ruby/1.8/webrick/server.rb:23:in `start'
+  /Users/supinchecompilla/.rvm/rubies/ruby-1.8.6-p399/lib/ruby/1.8/webrick/server.rb:82:in `start'
+
+Rendering rescues/layout (not_found)
