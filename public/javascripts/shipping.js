@@ -146,6 +146,7 @@ function update_total_cost(){
     type: "POST",
     url: "/checkout/calculate_costs",
     data:({
+      how_did_you_hear_about_us: $('#how_did_you_hear_about_us').val(),
       shipping_city: $('#shipping_city').val(),
       shipping_state: $('#shipping_state_hidden').val(),
       shipping_country: $('#shipping_country_hidden').val(),

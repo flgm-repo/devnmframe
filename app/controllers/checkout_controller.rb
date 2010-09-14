@@ -211,9 +211,15 @@ class CheckoutController < ApplicationController
     tax_cost = 0 if tax_cost.nil?
 
     code = FreeNameframeCode.find_by_code(params[:how_did_you_hear_about_us])
-
+    #@post = Post.new(params[:post])
+    #logger.debug "New post: #{@post.attributes.inspect}-----------" 
+    logger.debug "----------->: #{params[:shipping_state]}"
+    logger.debug "----------->: #{params[:shipping_country]}"  
+    
+    logger.debug "----------->: #{params[:how_did_you_hear_about_us]}" 
+#debug @how_did_you_hear_about_us
     discount = (code && code.discount)? code.discount : 0
-
+#nameframe_cost = nameframe_cost + 100
     render :json => {
         :nameframe_cost => nameframe_cost,
         :shipping_cost => shipping_cost,
