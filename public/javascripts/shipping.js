@@ -18,6 +18,10 @@ $().ready(function(){
     update_total_cost();
   });
 
+  $("#how_did_you_hear_about_us").change(function(){
+    update_total_cost();
+  });
+
   $(".shipping_cost").change(function(){
     update_total_cost();
   });
