@@ -61,6 +61,6 @@ SERVER_URL = "http://69.65.41.139:3001"
 
 Mime::Type.register "image/png", :png
 require "asset_tag_helper_ext"
-
-ActiveRecord::Base.logger = Logger.new(STDOUT)
-ActiveRecord::Base.logger = Log4r::Logger.new("Application Log") 
+# LOGGER
+#ActiveRecord::Base.logger = Logger.new(STDOUT)
+#ActiveRecord::Base.logger = Log4r::Logger.new("Application Log") 

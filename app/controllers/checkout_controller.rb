@@ -212,10 +212,6 @@ class CheckoutController < ApplicationController
 
     code = FreeNameframeCode.find_by_code(params[:how_did_you_hear_about_us])
 
-    logger.debug "----------->: #{params[:shipping_state]}"
-    logger.debug "----------->: #{params[:shipping_country]}"  
-    logger.debug "----------->: #{params[:how_did_you_hear_about_us]}" 
-
     discount = (code && code.discount)? code.discount : 0
 
     render :json => {

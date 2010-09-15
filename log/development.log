@@ -12039,3 +12039,132 @@ Processing CheckoutController#calculate_costs (for 127.0.0.1 at 2010-09-14 14:47
 ----------->: USA
 ----------->: rebex
 Completed in 44ms (View: 1, DB: 7) | 200 OK [http://0.0.0.0/checkout/calculate_costs]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing SiteController#index (for 127.0.0.1 at 2010-09-14 14:56:47) [GET]
+  [4;35;1mNameframe Columns (1.6ms)[0m   [0mSHOW FIELDS FROM `nameframes`[0m
+  [4;36;1mNameframe Load (0.5ms)[0m   [0;1mSELECT * FROM `nameframes` WHERE (`nameframes`.`uuid` = '74310ae6-8486-4d6d-91b7-52cc5bb5fe7b') LIMIT 1[0m
+  [4;35;1mCheckout Load (0.4ms)[0m   [0mSELECT * FROM `checkouts` WHERE (`checkouts`.nameframe_id = 3) LIMIT 1[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mBEGIN[0m
+  [4;35;1mNameframe Destroy (0.5ms)[0m   [0mDELETE FROM `nameframes` WHERE `id` = 3[0m
+  [4;36;1mSQL (0.9ms)[0m   [0;1mCOMMIT[0m
+Rendering template within layouts/application
+Rendering site/index
+  [4;35;1mUser Columns (1.6ms)[0m   [0mSHOW FIELDS FROM `users`[0m
+  [4;36;1mUser Load (0.3ms)[0m   [0;1mSELECT * FROM `users` WHERE (`users`.`id` = 3) LIMIT 1[0m
+  [4;35;1mRole Columns (1.3ms)[0m   [0mSHOW FIELDS FROM `roles`[0m
+  [4;36;1mRole Load (0.3ms)[0m   [0;1mSELECT * FROM `roles` WHERE (`roles`.`id` = 1) [0m
+Rendered shared/_social_voice (0.1ms)
+Rendered shared/_header_image (0.5ms)
+Completed in 102ms (View: 24, DB: 8) | 200 OK [http://0.0.0.0/]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing ApplicationController#index (for 127.0.0.1 at 2010-09-14 14:56:48) [GET]
+
+ActionController::RoutingError (No route matches "/undefined" with {:method=>:get}):
+  /Users/supinchecompilla/.rvm/rubies/ruby-1.8.6-p399/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+  /Users/supinchecompilla/.rvm/rubies/ruby-1.8.6-p399/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+  /Users/supinchecompilla/.rvm/rubies/ruby-1.8.6-p399/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+  /Users/supinchecompilla/.rvm/rubies/ruby-1.8.6-p399/lib/ruby/1.8/webrick/server.rb:162:in `start'
+  /Users/supinchecompilla/.rvm/rubies/ruby-1.8.6-p399/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+  /Users/supinchecompilla/.rvm/rubies/ruby-1.8.6-p399/lib/ruby/1.8/webrick/server.rb:95:in `start'
+  /Users/supinchecompilla/.rvm/rubies/ruby-1.8.6-p399/lib/ruby/1.8/webrick/server.rb:92:in `each'
+  /Users/supinchecompilla/.rvm/rubies/ruby-1.8.6-p399/lib/ruby/1.8/webrick/server.rb:92:in `start'
+  /Users/supinchecompilla/.rvm/rubies/ruby-1.8.6-p399/lib/ruby/1.8/webrick/server.rb:23:in `start'
+  /Users/supinchecompilla/.rvm/rubies/ruby-1.8.6-p399/lib/ruby/1.8/webrick/server.rb:82:in `start'
+
+Rendering rescues/layout (not_found)
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing CheckoutController#checkout (for 127.0.0.1 at 2010-09-14 17:53:34) [GET]
+Redirected to http://0.0.0.0:3000/
+Completed in 3ms (DB: 0) | 302 Found [http://0.0.0.0/checkout]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing SiteController#index (for 127.0.0.1 at 2010-09-14 17:53:34) [GET]
+Rendering template within layouts/application
+Rendering site/index
+Rendered shared/_social_voice (0.1ms)
+Rendered shared/_header_image (0.5ms)
+Completed in 18ms (View: 14, DB: 0) | 200 OK [http://0.0.0.0/]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing CheckoutController#checkout (for 127.0.0.1 at 2010-09-14 21:55:29) [GET]
+Redirected to http://0.0.0.0:3000/
+Completed in 3ms (DB: 0) | 302 Found [http://0.0.0.0/checkout]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing SiteController#index (for 127.0.0.1 at 2010-09-14 21:55:29) [GET]
+Rendering template within layouts/application
+Rendering site/index
+Rendered shared/_social_voice (0.1ms)
+Rendered shared/_header_image (0.6ms)
+Completed in 26ms (View: 24, DB: 0) | 200 OK [http://0.0.0.0/]
+  [4;35;1mSQL (0.2ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing CheckoutController#checkout (for 127.0.0.1 at 2010-09-14 22:06:30) [GET]
+  [4;35;1mNameframe Columns (39.9ms)[0m   [0mSHOW FIELDS FROM `nameframes`[0m
+  [4;36;1mNameframe Load (1.0ms)[0m   [0;1mSELECT * FROM `nameframes` WHERE (`nameframes`.`uuid` = '04109dc4-3016-417c-910b-e9ce961604c9') LIMIT 1[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mBEGIN[0m
+  [4;36;1mFontType Columns (1.3ms)[0m   [0;1mSHOW FIELDS FROM `font_types`[0m
+  [4;35;1mFontType Load (0.7ms)[0m   [0mSELECT * FROM `font_types` WHERE (`font_types`.`id` = 1) [0m
+  [4;36;1mMatt Columns (1.4ms)[0m   [0;1mSHOW FIELDS FROM `matts`[0m
+  [4;35;1mMatt Load (0.5ms)[0m   [0mSELECT * FROM `matts` WHERE (`matts`.`id` = 26) [0m
+  [4;36;1mFrame Columns (1.5ms)[0m   [0;1mSHOW FIELDS FROM `frames`[0m
+  [4;35;1mFrame Load (1.3ms)[0m   [0mSELECT * FROM `frames` WHERE (`frames`.`id` = 14) [0m
+  [4;36;1mFrameMattPermissions Load (0.7ms)[0m   [0;1mSELECT * FROM `frame_matt_permissions` WHERE (allowed IS true && frame_id = 14 && top_matt_id = 26) LIMIT 1[0m
+  [4;35;1mFrameMattPermissions Load (0.6ms)[0m   [0mSELECT * FROM `frame_matt_permissions` WHERE (allowed IS true && frame_id = 14 && top_matt_id = 26 && bottom_matt_id = NULL) LIMIT 1[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mCOMMIT[0m
+  [4;35;1mSettings Load (0.3ms)[0m   [0mSELECT * FROM `settings` WHERE (`settings`.`var` = 'base_price_with_frame') LIMIT 1[0m
+  [4;36;1mSettings Load (0.3ms)[0m   [0;1mSELECT * FROM `settings` WHERE (`settings`.`var` = 'photos_price') LIMIT 1[0m
+Rendering template within layouts/application
+Rendering checkout/checkout
+Rendered checkout/_accounts (0.1ms)
+Rendered checkout/_billing_address (0.1ms)
+Rendered checkout/_shipping_address (0.1ms)
+Rendered checkout/_confirm (0.6ms)
+Rendered shared/_social_voice (0.1ms)
+Rendered shared/_header_image (0.7ms)
+Completed in 180ms (View: 41, DB: 50) | 200 OK [http://0.0.0.0/checkout]
+  [4;35;1mSQL (0.1ms)[0m   [0mSET NAMES 'utf8'[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+
+
+Processing CheckoutController#checkout (for 127.0.0.1 at 2010-09-14 22:29:48) [GET]
+  [4;35;1mNameframe Columns (7.6ms)[0m   [0mSHOW FIELDS FROM `nameframes`[0m
+  [4;36;1mNameframe Load (0.3ms)[0m   [0;1mSELECT * FROM `nameframes` WHERE (`nameframes`.`uuid` = '04109dc4-3016-417c-910b-e9ce961604c9') LIMIT 1[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mBEGIN[0m
+  [4;36;1mFontType Columns (1.7ms)[0m   [0;1mSHOW FIELDS FROM `font_types`[0m
+  [4;35;1mFontType Load (0.5ms)[0m   [0mSELECT * FROM `font_types` WHERE (`font_types`.`id` = 1) [0m
+  [4;36;1mMatt Columns (1.8ms)[0m   [0;1mSHOW FIELDS FROM `matts`[0m
+  [4;35;1mMatt Load (0.3ms)[0m   [0mSELECT * FROM `matts` WHERE (`matts`.`id` = 26) [0m
+  [4;36;1mFrame Columns (1.7ms)[0m   [0;1mSHOW FIELDS FROM `frames`[0m
+  [4;35;1mFrame Load (0.4ms)[0m   [0mSELECT * FROM `frames` WHERE (`frames`.`id` = 14) [0m
+  [4;36;1mFrameMattPermissions Load (0.7ms)[0m   [0;1mSELECT * FROM `frame_matt_permissions` WHERE (allowed IS true && frame_id = 14 && top_matt_id = 26) LIMIT 1[0m
+  [4;35;1mFrameMattPermissions Load (0.6ms)[0m   [0mSELECT * FROM `frame_matt_permissions` WHERE (allowed IS true && frame_id = 14 && top_matt_id = 26 && bottom_matt_id = NULL) LIMIT 1[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mCOMMIT[0m
+  [4;35;1mSettings Load (0.3ms)[0m   [0mSELECT * FROM `settings` WHERE (`settings`.`var` = 'base_price_with_frame') LIMIT 1[0m
+  [4;36;1mSettings Load (0.2ms)[0m   [0;1mSELECT * FROM `settings` WHERE (`settings`.`var` = 'photos_price') LIMIT 1[0m
+Rendering template within layouts/application
+Rendering checkout/checkout
+Rendered checkout/_accounts (0.2ms)
+Rendered checkout/_billing_address (0.2ms)
+Rendered checkout/_shipping_address (0.2ms)
+Rendered checkout/_confirm (0.8ms)
+Rendered shared/_social_voice (0.1ms)
+Rendered shared/_header_image (0.7ms)
+Completed in 142ms (View: 60, DB: 17) | 200 OK [http://0.0.0.0/checkout]
