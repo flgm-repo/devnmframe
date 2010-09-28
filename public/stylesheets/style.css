@@ -1472,3 +1472,8 @@ a.fancy_div{
   margin-top: 15px
 }
 
+.idleField{
+    background:#EEE;
+    color: #6F6F6F;
+	border: solid 2px #DFDFDF;
+}

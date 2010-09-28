@@ -158,7 +158,11 @@ function update_total_cost(){
     }),
     dataType: "json",
     success: function(msg){
-      $(".order-total p span").html(formatCurrency(msg.total));
+	  $('#creditCardBlock1 :input').attr('disabled', true);
+	  $('#creditCardBlock1').addClass("idleField");
+	  /*$('#creditCardBlock2 :input').attr('disabled', true);
+	  $('#creditCardBlock2').addClass("idleField");*/
+	  $(".order-total p span").html(formatCurrency(msg.total));
     }
   });
 }
