@@ -116,8 +116,10 @@ class CheckoutController < ApplicationController
       :status=>Checkout::STATE_NEW,
       :archived=>0
     )
-
+    put "************************this is a test="
     response = @checkout.purchase
+    
+    
     if response.success?
       flash[:notice] = "Success"
 
