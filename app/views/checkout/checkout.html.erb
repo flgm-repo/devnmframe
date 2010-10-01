@@ -66,9 +66,9 @@
     <div class="clear"></div>
     <!-- Last CC section BEGINS-->
     <div class="inner-block">
-    <div id="creditCardBlock1"  class="inner-block">
+    <div   class="inner-block">
       <fieldset class="shipping">
-        <div class="span-15 column">
+        <div id="creditCardBlock1" class="span-15 column">
           <div class="row">
             <div class="span-10 column left">
               <label><span class="required">*</span> Credit Card Number: </label>
@@ -116,15 +116,15 @@
 
               <div class="span-10 clear-margin left column">
                 <label><span class="required">*</span> Card Type: </label>
-                <p><input type="radio" name="card_type" value="visa" id="card_type_visa" checked tabindex="30"/><label for="card_type_visa"> <img src="/images/payment-type-visa.gif" /></label></p>
-                <p><input type="radio" name="card_type" value="master" id="card_type_master" tabindex="31"/><label for="card_type_master"><img src="/images/payment-type-master.gif" /></label></p>
-                <p><input type="radio" name="card_type" value="american_express" id="card_type_amex" tabindex="32"/><label for="card_type_amex"> <img src="/images/payment-type-amex.jpg" /></label></p>
-                <p><input type="radio" name="card_type" value="discover" id="card_type_discover" tabindex="32"/><label for="card_type_discover"><img src="/images/discover-card.gif" /></label></p>
+                <p class="cc_type"><input type="radio" name="card_type" value="visa" id="card_type_visa" checked tabindex="30"/><label for="card_type_visa"> <img src="/images/payment-type-visa.gif" /></label></p>
+                <p class="cc_type"><input type="radio" name="card_type" value="master" id="card_type_master" tabindex="31"/><label for="card_type_master"><img src="/images/payment-type-master.gif" /></label></p>
+                <p class="cc_type"><input type="radio" name="card_type" value="american_express" id="card_type_amex" tabindex="32"/><label for="card_type_amex"> <img src="/images/payment-type-amex.jpg" /></label></p>
+                <p class="cc_type"><input type="radio" name="card_type" value="discover" id="card_type_discover" tabindex="32"/><label for="card_type_discover"><img src="/images/discover-card.gif" /></label></p>
               </div>
           </div>
         </div>
         <!-- Span-15 Ends-->
-        <div class="span-15 column prepend-1 input-box">
+        <div class="span-15 column prepend-1 input-box" id="shipping_details_div">
           <p class="enter">Please select a shipping method</p>
           <label generated="true" for="shipping_cost" id="shipping_cost_div"></label>
           <p class="normal_shipping"><input type="radio"  value="ground" id="shipping_cost_normal" name="shipping_cost" class = "shipping_cost" tabindex="33" /><label for="shipping_cost_normal">Ground - $6.95</label></p>

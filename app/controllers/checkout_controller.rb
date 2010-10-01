@@ -215,12 +215,20 @@ class CheckoutController < ApplicationController
     code = FreeNameframeCode.find_by_code(params[:how_did_you_hear_about_us])
 
     discount = (code && code.discount)? code.discount : 0
-
+    totalAmt = (nameframe_cost + shipping_cost + tax_cost) * (1 - discount/100)
+    
+    if totalAmt==0.0
+      zeroAmt = 1
+    else
+      zeroAmt = 0  
+    end
+    
     render :json => {
         :nameframe_cost => nameframe_cost,
         :shipping_cost => shipping_cost,
         :tax => tax_cost,
-        :total => (nameframe_cost + shipping_cost + tax_cost) * (1 - discount/100)
+        :total => totalAmt,
+        :zeroAmt => zeroAmt
       }
   end
 end
