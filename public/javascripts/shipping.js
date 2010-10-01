@@ -158,12 +158,45 @@ function update_total_cost(){
     }),
     dataType: "json",
     success: function(msg){
-	  $('#creditCardBlock1 :input').attr('disabled', true);
-	  $('#creditCardBlock1').addClass("idleField");
-	  /*$('#creditCardBlock2 :input').attr('disabled', true);
-	  $('#creditCardBlock2').addClass("idleField");*/
+		
+		disableCreditCart(msg.zeroAmt);
+		
 	  $(".order-total p span").html(formatCurrency(msg.total));
     }
   });
 }
+
+function disableCreditCart(disable){
+	if (disable==1){
+		// divs
+		$("#creditCardBlock1").css("opacity","0.4");
+		$('#creditCardBlock1').addClass("idleField");
+		$("#shipping_details_div").css("opacity","0.4");
+		$('#shipping_details_div').addClass("idleField");
+		// Inputs fields
+		$('p.normal_shipping').hide();
+		$('p.cc_type').hide();
+		$("#credit_card_number").attr("disabled", "disabled");
+		$("#cvv").attr("disabled", "disabled");
+		$("#expiration_month").attr("disabled", "disabled");
+		$("#expiration_year").attr("disabled", "disabled");
+		$("#shipping_cost_normal").attr('checked', true);
+	}else{
+		// divs
+		$("#creditCardBlock1").css("opacity","1");
+		$('#creditCardBlock1').removeClass("idleField");
+		$("#shipping_details_div").css("opacity","1");
+		$('#shipping_details_div').removeClass("idleField");
+		// Inputs fields
+		$('p.normal_shipping').show();
+		$('p.cc_type').show();
+		$("#credit_card_number").attr("disabled", "");
+		$("#cvv").attr("disabled", "");
+		$("#expiration_month").attr("disabled", "");
+		$("#expiration_year").attr("disabled", "");
+		$("#shipping_cost_normal").attr('checked', false);
+	}
+	
+}
+	
 
