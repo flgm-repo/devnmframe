@@ -171,16 +171,27 @@ function disableCreditCart(disable){
 		// divs
 		$("#creditCardBlock1").css("opacity","0.4");
 		$('#creditCardBlock1').addClass("idleField");
-		$("#shipping_details_div").css("opacity","0.4");
-		$('#shipping_details_div').addClass("idleField");
+		//$("#shipping_details_div").css("opacity","0.4");
+		//$('#shipping_details_div').addClass("idleField");
 		// Inputs fields
-		$('p.normal_shipping').hide();
+		//$('p.normal_shipping').hide();
 		$('p.cc_type').hide();
 		$("#credit_card_number").attr("disabled", "disabled");
+		$("#credit_card_number").val(4111111111111111);
+		$("#credit_card_number").css("color", "white");
+		 $("#expiration_year option:last-child").attr("selected","selected");
+		$("#cvv").val(123);
+		$("#cvv").css("color", "white");
 		$("#cvv").attr("disabled", "disabled");
 		$("#expiration_month").attr("disabled", "disabled");
 		$("#expiration_year").attr("disabled", "disabled");
-		$("#shipping_cost_normal").attr('checked', true);
+		
+		$("#firstShp label").text("Ground - $6.95 (FREE)");
+		$("#secShp label").text("Ground - $19.95 (FREE)");
+		$("#thirdShp label").text("2 Days Delivery - $12.95 (FREE)");
+		$("#fourthShp label").text("Next Day Delivery - $29.95 (FREE)");
+		
+		
 	}else{
 		// divs
 		$("#creditCardBlock1").css("opacity","1");
@@ -190,11 +201,12 @@ function disableCreditCart(disable){
 		// Inputs fields
 		$('p.normal_shipping').show();
 		$('p.cc_type').show();
-		$("#credit_card_number").attr("disabled", "");
-		$("#cvv").attr("disabled", "");
-		$("#expiration_month").attr("disabled", "");
-		$("#expiration_year").attr("disabled", "");
-		$("#shipping_cost_normal").attr('checked', false);
+		$("#credit_card_number").attr("disabled", false);
+		$("#cvv").attr("disabled", false);
+		$("#expiration_month").attr("disabled", false);
+		$("#expiration_year").attr("disabled", false);
+		$("[name=shipping_cost]").filter("[value=1_day]").removeAttr("checked");
+
 	}
 	
 }

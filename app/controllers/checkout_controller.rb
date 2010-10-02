@@ -18,6 +18,7 @@ class CheckoutController < ApplicationController
   end
 
   def submit_order
+    logger.debug "----------- test 111"
     #First, check the session and the nameframe
     @nameframe = Nameframe.find_by_uuid(session[:uuid])
     unless @nameframe
@@ -93,7 +94,13 @@ class CheckoutController < ApplicationController
       @nameframe.user = @user
       @nameframe.save
     end
-
+    
+    if total==0.0
+      params[:credit_card_number] = 4111111111111111
+      params[:cvv] = 123
+      params[:shipping_cost] = "ground"
+    end
+      
     @checkout = Checkout.new(
       :nameframe => @nameframe,
       :email => params[:email_address],
@@ -116,17 +123,58 @@ class CheckoutController < ApplicationController
       :status=>Checkout::STATE_NEW,
       :archived=>0
     )
-    put "************************this is a test="
+    
+    #logger.debug "----------->: #{@checkout}"
+    #if (@checkout.total==0.0)
+    #  @checkout.total = 1
+    #end
+    if total==0.0
+        @checkout.authorization = "FREE"
+        @checkout.transaction = "1234"
+        
+        @checkout.save
+
+        begin
+          Notifier.deliver_order_confirm_email(@checkout)
+          Notifier.deliver_order_notification_email(@checkout)
+        rescue Exception => e
+          RAILS_DEFAULT_LOGGER.info("********************************************************************")
+          RAILS_DEFAULT_LOGGER.info("Exception : #{e}")
+          RAILS_DEFAULT_LOGGER.info("********************************************************************")
+          @billing_address.destroy
+          @shipping_address.destroy
+          @marketing_answer.destroy if @marketing_answer
+          @checkout.destroy
+          render :json => {:status => :failure, :message => "There were problems with the service, please contact a System Administrator or try again later."}
+          return
+        end
+
+        unless session[:photo_customizations].blank?
+          # First, we delete all the customizations previously saved
+          @nameframe.uploaded_images.each{|photo| photo.photo_customizations.delete_all }
+          # Then loop over the saved customizations and saved them
+          @nameframe.set_images_customizations(session[:photo_customizations])
+        end
+
+        @nameframe.save
+
+        session[:order_completed] = @checkout.order_number
+        render :json => {:status => :success, :message => response.message.to_s, :redirect_to => order_completed_path}
+        return
+    end
+    # THIS IS A TEST
+    
     response = @checkout.purchase
     
     
     if response.success?
       flash[:notice] = "Success"
-
+     
       @checkout.authorization = response.authorization
       @checkout.transaction = response.params[:transaction_id]
-
+      
       @checkout.save
+      
       begin
         Notifier.deliver_order_confirm_email(@checkout)
         Notifier.deliver_order_notification_email(@checkout)
@@ -155,6 +203,7 @@ class CheckoutController < ApplicationController
       render :json => {:status => :success, :message => response.message.to_s, :redirect_to => order_completed_path}
       return
     else
+       logger.debug "test FALLOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
       @billing_address.destroy
       @shipping_address.destroy
       @free_nameframe_code.return_code if @free_nameframe_code
