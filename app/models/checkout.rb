@@ -92,6 +92,7 @@ class Checkout < ActiveRecord::Base
 
   def purchase
     amount_to_charge = total_in_cents
+    
     gateway = ActiveMerchant::Billing::Base.gateway(:authorize_net).new(
       :login => Settings.authorize_net_login,
       :password => Settings.authorize_net_password,

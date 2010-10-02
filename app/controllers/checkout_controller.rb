@@ -18,7 +18,7 @@ class CheckoutController < ApplicationController
   end
 
   def submit_order
-    logger.debug "----------- test 111"
+    
     #First, check the session and the nameframe
     @nameframe = Nameframe.find_by_uuid(session[:uuid])
     unless @nameframe
@@ -124,10 +124,7 @@ class CheckoutController < ApplicationController
       :archived=>0
     )
     
-    #logger.debug "----------->: #{@checkout}"
-    #if (@checkout.total==0.0)
-    #  @checkout.total = 1
-    #end
+    
     if total==0.0
         @checkout.authorization = "FREE"
         @checkout.transaction = "1234"
@@ -203,7 +200,7 @@ class CheckoutController < ApplicationController
       render :json => {:status => :success, :message => response.message.to_s, :redirect_to => order_completed_path}
       return
     else
-       logger.debug "test FALLOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
+       
       @billing_address.destroy
       @shipping_address.destroy
       @free_nameframe_code.return_code if @free_nameframe_code

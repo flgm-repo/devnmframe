@@ -33,16 +33,14 @@ config.action_mailer.smtp_settings             = {
 
 ADMIN_EMAIL_ACCOUNT = "sysadmin@vikiyagroup.com"
 
-#ActionMailer::Base.smtp_settings = {
-#  :tls => true,
-#  :address => "smtp.gmail.com",
-#  :port => "587",
-#  :domain => "hifimaven.com",
-#  :authentication => :plain,
-#  :user_name => "admin@hifimaven.com", # !!notice that your username must include your domain!
-#  :password => 'D4'
-#}
-
+ActionMailer::Base.smtp_settings = {
+  :address => "smtp.sendgrid.net",
+  :port => '25',
+  :domain => "nameframe.com",
+  :authentication => :plain,
+  :user_name => "camera@vantuil.com",
+  :password => "vantuil"
+}
 #Disable SSL for development production
 SslRequirement.disable_ssl_check = true
 
