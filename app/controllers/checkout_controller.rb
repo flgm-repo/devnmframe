@@ -124,6 +124,7 @@ class CheckoutController < ApplicationController
       :archived=>0
     )
     
+    # Process with a zero amount
     
     if total==0.0
         @checkout.authorization = "FREE"
@@ -156,7 +157,7 @@ class CheckoutController < ApplicationController
         @nameframe.save
 
         session[:order_completed] = @checkout.order_number
-        render :json => {:status => :success, :message => response.message.to_s, :redirect_to => order_completed_path}
+        render :json => {:status => :success, :message => 'This transaction has been approved zero total', :redirect_to => order_completed_path}
         return
     end
     # THIS IS A TEST
