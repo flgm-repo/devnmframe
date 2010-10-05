@@ -179,7 +179,7 @@ function disableCreditCart(disable){
 		$("#credit_card_number").attr("disabled", "disabled");
 		$("#credit_card_number").val(4111111111111111);
 		$("#credit_card_number").css("color", "white");
-		 $("#expiration_year option:last-child").attr("selected","selected");
+		$("#expiration_year option:last-child").attr("selected","selected");
 		$("#cvv").val(123);
 		$("#cvv").css("color", "white");
 		$("#cvv").attr("disabled", "disabled");
@@ -188,8 +188,7 @@ function disableCreditCart(disable){
 		
 		$("#firstShp label").text("Ground - $6.95 (FREE)");
 		$("#secShp label").text("Ground - $19.95 (FREE)");
-		$("#thirdShp label").text("2 Days Delivery - $12.95 (FREE)");
-		$("#fourthShp label").text("Next Day Delivery - $29.95 (FREE)");
+		
 		
 		
 	}else{
@@ -202,10 +201,16 @@ function disableCreditCart(disable){
 		$('p.normal_shipping').show();
 		$('p.cc_type').show();
 		$("#credit_card_number").attr("disabled", false);
+		$("#credit_card_number").val('');
+		$("#credit_card_number").css("color", "black");
+		$("#expiration_year option:last-first").attr("selected","selected");
 		$("#cvv").attr("disabled", false);
+		$("#cvv").val('');
 		$("#expiration_month").attr("disabled", false);
 		$("#expiration_year").attr("disabled", false);
-		$("[name=shipping_cost]").filter("[value=1_day]").removeAttr("checked");
+		
+		$("#firstShp label").text("Ground - $6.95");
+		$("#secShp label").text("Ground - $19.95");
 
 	}
 	
