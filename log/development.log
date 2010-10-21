@@ -13093,7 +13093,6 @@ Rendering site/index
 Rendered shared/_social_voice (0.1ms)
 Rendered shared/_header_image (0.5ms)
 Completed in 11ms (View: 8, DB: 0) | 200 OK [http://0.0.0.0/]
-<<<<<<< HEAD
   [4;36;1mSQL (0.4ms)[0m   [0;1mSET NAMES 'utf8'[0m
   [4;35;1mSQL (0.3ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
   [4;36;1mSettings Columns (56.9ms)[0m   [0;1mSHOW FIELDS FROM `settings`[0m
@@ -44620,5 +44619,3 @@ Rendering site/index
 Rendered shared/_social_voice (0.2ms)
 Rendered shared/_header_image (0.8ms)
 Completed in 37ms (View: 35, DB: 0) | 200 OK [http://0.0.0.0/]
-=======
->>>>>>> parent of c9f7d08... git ignore files
