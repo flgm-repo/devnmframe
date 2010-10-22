@@ -23,3 +23,7 @@
   Once all is running well, a task must be run in order for the application to remove old unused nameframes from the database. This daemon is run by the next command:
   
       whenever --update-crontab nameframe
+
+Just in case you got an error from EY when cloning or re-deploying related to the "whenever"
+
+/data/Name_Frame/current $ sudo gem install javan-whenever --source http://gems.github.com
