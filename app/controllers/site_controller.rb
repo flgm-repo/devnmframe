@@ -23,9 +23,12 @@ class SiteController < ApplicationController
   end
 
   def media
-    @files = Dir.glob("public/media_content/*.html") rescue []
+    #@files = Dir.glob("public/media_content/*.html") rescue []
+    @files = ['Media Kit.html', 'Logos.html']
+    #, 'Product Photos.html', 'Press Releases.html', 'Screenshots.html', 'NameFrame in the News.html' ]
+    
     if params[:id].blank?
-      @page_title = File.basename(@files.first, '.html') rescue ""
+      @page_title = File.basename('Media Kit', '.html') rescue ""
     else
       @page_title = params[:id]
     end

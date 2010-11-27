@@ -1101,10 +1101,12 @@ ul.media{
   list-style-type: none;
   margin: 6px;
   width: 240px;
+
 }
 ul.media li{
   margin-bottom: 5px;
-  padding: .6em .5em;
+  padding: .6em .5em; 
+
 }
 ul.media li:hover {
   background-color: #3A73BA;
@@ -1114,7 +1116,7 @@ ul.media li:hover {
 ul.media li a, ul.media li a:visited{
   color: #000;
   text-decoration: none;
-  padding: 8px 162px 8px 0;
+ /* padding: 8px 192px 8px 0; Remove long titles trunked*/
 }
 ul.media li a:hover{
   color: #FFF;
