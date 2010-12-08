@@ -1,12 +1,12 @@
 <div class= "span-9 first column outer-block">
   <ul class="media">
     <%for file in @files -%>
-     <li><%= link_to "#{File.basename(file, '.html').capitalize}", "/site/media/#{File.basename(file)}" %></li>
+     <li><%= link_to "#{File.basename(file, '.html')}", "/site/media/#{File.basename(file)}" %></li>
     <%end%>
   </ul>
 </div>
 <div class="media_div span-24 last column outer-block">
-  <h5><%=@page_title.capitalize%></h5>
+  <h5><%=@page_title%></h5>
   <div class="media inner-block" >
     <iframe scrolling = "auto" src="<%= "/media_content/#{@page_title}.html" unless @page_title.blank? %>" class="customize_content">
     </iframe>
