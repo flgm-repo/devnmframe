@@ -4,4 +4,16 @@
     <li class="digg"><a href="http://digg.com/submit?url=http%3A//nameframe.com&amp;title=Helping%20You%20Frame%20Your%20Love" title="">Digg</a></li>
   </ul>
 <div class="span-4 prepend-29 push-5"  >
+   <% if @media==1%>
+   <div class="contact-text" style="float:right;font-size:13px;" >
+    
+    <b>Press Contact:</b><br>
+    Kurt VanTuil<br>
+    NameFrame.com<br>
+    Toll Free 877-713-2336<br>
+    <a href="mailto:kvantuil@nameframe.com">kvantuil@nameframe.com</a><br>
+    
+  <% else %>
   <%= link_to image_tag ("livehelp.gif", :width => "109", :height => "42", :alt => "Live Help"), contact_path %>
+  <% end %>
+</div>  

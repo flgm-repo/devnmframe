@@ -7,8 +7,12 @@
           <%= render :partial=> "/shared/social_voice", :locals=>{}%>
 <% else -%>
 <%= link_to image_tag ("logo.gif", :width => "206", :height => "104", :alt => "Nameframe", :class =>"edit-margin"), root_path, :class => "logo span-8 column append-21" %>
-          
-          <%= render :partial=> "/shared/social_voice", :locals=>{}%>
+          <% if @media==1%>
+          <div style="position:absolute;left:490px;top:40px;">
+             <%= image_tag ("ethan_small.jpg",  :alt => "Nameframe", :class =>"")%>
           </div>
+          <% end%>
+          <%= render :partial=> "/shared/social_voice", :locals=>{}%>
+          
 <% end -%>
 
