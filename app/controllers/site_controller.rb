@@ -24,7 +24,7 @@ class SiteController < ApplicationController
 
   def media
     #@files = Dir.glob("public/media_content/*.html") rescue []
-    @files = ['Media Kit.html', 'Logos.html', 'Product Photos.html', 'Press Releases.html']
+    @files = ['Media Kit.html', 'Logos.html', 'Product Photos.html', 'Press Releases.html', 'Screenshots.html']
     #, 'Product Photos.html', 'Press Releases.html', 'Screenshots.html', 'NameFrame in the News.html' ]
     
     if params[:id].blank?
